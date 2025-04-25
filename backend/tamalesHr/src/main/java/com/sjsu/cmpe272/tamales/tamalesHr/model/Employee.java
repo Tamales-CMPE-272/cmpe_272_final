@@ -1,38 +1,69 @@
 package com.sjsu.cmpe272.tamales.tamalesHr.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "employees")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Employee {
-
     @Id
-    @Column(name = "emp_no")
-    private Integer empNo;
-
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
-
-    @Column(name = "first_name", length = 255)
-    private String firstName;
-
-    @Column(name = "last_name", length = 255)
-    private String lastName;
-
-    @Column(name = "gender")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer emp_no;
+    private Date birth_date;
+    private String first_name;
+    private String last_name;
     private Integer gender;
+    private Date hire_date;
 
-    @Column(name = "hire_date")
-    private LocalDate hireDate;
+    public Employee() {
+    }
+
+    public Integer getEmp_no() {
+        return emp_no;
+    }
+
+    public void setEmp_no(Integer emp_no) {
+        this.emp_no = emp_no;
+    }
+
+    public Date getBirth_date() {
+        return birth_date;
+    }
+
+    public void setBirth_date(Date birth_date) {
+        this.birth_date = birth_date;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public Date getHire_date() {
+        return hire_date;
+    }
+
+    public void setHire_date(Date hire_date) {
+        this.hire_date = hire_date;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
 }
