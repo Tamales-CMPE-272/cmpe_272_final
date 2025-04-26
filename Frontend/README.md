@@ -1,14 +1,15 @@
 # HR Management App (Frontend)
+
 A modern, responsive React/Vite frontend for HR Management, featuring dynamic CRUD interfaces and analytics dashboards.
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
-    - [1. Clone the repository](#1-clone-the-repository)
-    - [2. Install dependencies](#2-install-dependencies)
-    - [3. Environment variables](#3-environment-variables)
-    - [4. Running in development](#4-running-in-development)
-    - [5. Building for production](#5-building-for-production)
+  - [1. Clone the repository](#1-clone-the-repository)
+  - [2. Install dependencies](#2-install-dependencies)
+  - [3. Environment variables](#3-environment-variables)
+  - [4. Running in development](#4-running-in-development)
+  - [5. Building for production](#5-building-for-production)
 - [Project Structure](#project-structure)
 - [Technologies](#technologies)
 - [Available Scripts](#available-scripts)
@@ -19,7 +20,7 @@ A modern, responsive React/Vite frontend for HR Management, featuring dynamic CR
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/hr-management-frontend.git
+git clone https://github.com/Tamales-CMPE-272/cmpe_272_final.git
 cd frontend
 ```
 
@@ -38,6 +39,7 @@ Create a `.env.development` file in the project root with:
 ```env
 VITE_API_BASE_URL=http://localhost:3000
 ```
+
 This should point to your backend which can do the required cruds.
 
 > **Note:** Vite only exposes variables prefixed with `VITE_` to the client.
