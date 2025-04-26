@@ -8,7 +8,7 @@ app.use(cors({
   origin: 'http://localhost:5173'
 }));
 // Configure Sequelize
-const sequelize = new Sequelize('employees', 'root', 'team_late', {
+const sequelize = new Sequelize('employees', 'root', '', {
   host: 'localhost',
   dialect: 'mysql',
   logging: false,

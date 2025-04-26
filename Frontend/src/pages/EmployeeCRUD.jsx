@@ -42,9 +42,10 @@ function EmployeeCRUD() {
     };
 
     // 2. Handlers: create (POST) or update (PUT)
-    const handleChange = e =>
+    const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
-
+        setErrors({})
+    }
     const handleSubmit = e => {
         e.preventDefault();
         const errs = validateForm();
