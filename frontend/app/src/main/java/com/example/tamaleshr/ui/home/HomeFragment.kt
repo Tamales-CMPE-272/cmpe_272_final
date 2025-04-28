@@ -23,8 +23,8 @@ class HomeFragment : Fragment() {
 
     private val viewModel by viewModels<HomeViewModel> { HomeViewModel.Factory }
 
-    val navController: NavController
-        get() = requireActivity().findNavController(R.id.nav_host_fragment_content_main)
+    private val navController: NavController
+        get() = requireView().findNavController()
 
     private var _binding: FragmentHomeBinding? = null
 

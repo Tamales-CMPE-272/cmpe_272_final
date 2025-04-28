@@ -16,10 +16,6 @@
         android:name="com.example.tamaleshr.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" >
-        <action
-            android:id="@+id/action_nav_profile_to_nav_salary"
-            app:destination="@id/nav_salary"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -27,9 +23,5 @@
         android:name="com.example.tamaleshr.ui.salary.SalaryFragment"
         android:label="@string/menu_salary"
         tools:layout="@layout/fragment_salary" >
-        <action
-            android:id="@+id/action_nav_salary_to_nav_profile"
-            app:destination="@id/nav_profile"
-            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
