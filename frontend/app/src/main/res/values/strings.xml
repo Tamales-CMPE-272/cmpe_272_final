@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">TamalesHR</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_salary">Salary</string>
+
+    <string name="home_title">Welcome</string>
+    <string name="home_subtitle">Let\'s manage your data</string>
+    <string name="home_emp_no">Emp No: %1$s</string>
+    <string name="home_emp_welcome">Welcome %1$s!</string>
+
+    <string name="salary_description">Manage your personal information</string>
+
+    <string name="profile_description">See your salary information</string>
+</resources>
