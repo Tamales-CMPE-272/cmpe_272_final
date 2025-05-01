@@ -1,0 +1,65 @@
+# ----------------------------------------
+# Global ignores
+# ----------------------------------------
+# macOS
+.DS_Store
+id_ed25519
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# ----------------------------------------
+# IntelliJ IDEA
+# ----------------------------------------
+# Ignore IDEA project files at any level
+*.iml
+*.iws
+*.ipr
+.idea/
+
+# ----------------------------------------
+# Backend (Spring)
+# ----------------------------------------
+# Maven
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# Gradle (if applicable)
+backend/.gradle/
+backend/build/
+
+# Logs
+backend/*.log
+
+# ----------------------------------------
+# Frontend (Android)
+# ----------------------------------------
+# Gradle
+frontend/.gradle/
+frontend/build/
+
+# Android Studio / IntelliJ
+frontend/.idea/
+frontend/*.iml
+frontend/.kotlin
+
+
+# Local config (SDK path, secrets)
+frontend/local.properties
+
+# Generated native builds
+frontend/.externalNativeBuild/
+frontend/.cxx/
+
+# Captures and outputs
+frontend/captures/
+frontend/*.apk
+frontend/*.ap_
+frontend/*.dex
+
+# Generated Java files, binaries, etc.
+frontend/bin/
+frontend/gen/

@@ -1,20 +1,19 @@
 package com.example.tamaleshr.ui.salary
 
+import androidx.lifecycle.ViewModelProvider
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.tamaleshr.databinding.FragmentSalaryBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tamaleshr.ui.salary.SalaryAdapter
 
 class SalaryFragment : Fragment() {
 
     private var _binding: FragmentSalaryBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +21,26 @@ class SalaryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val salaryViewModel =
-            ViewModelProvider(this).get(SalaryViewModel::class.java)
-
         _binding = FragmentSalaryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textSlideshow
-        salaryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Setup RecyclerView
+        val adapter = SalaryAdapter()
+        binding.salaryList.layoutManager = LinearLayoutManager(requireContext())
+        binding.salaryList.adapter = adapter
+
+        val viewModel = ViewModelProvider(this).get(SalaryViewModel::class.java)
+        val employeeId = arguments?.getString("empId") ?: "12345"
+        viewModel.salaryLiveData.observe(viewLifecycleOwner) { list ->
+            if (list != null) {
+                adapter.submitList(list)
+            }
         }
-        return root
+        // Trigger data fetch
+        viewModel.fetchSalary(employeeId)
     }
 
     override fun onDestroyView() {

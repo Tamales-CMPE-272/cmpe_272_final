@@ -11,8 +11,8 @@ class SalaryRepository(
     override val provider: ServiceProvider<SalaryService>
 ) : Repository<SalaryService> {
 
-    suspend fun findEmployeeById(id: String): Response<Employee> {
-        val response = provider.service().fetchGradesByAssignment(
+    fun findSalaryByEmployeeId(id: String): Response<List<Salary>>? {
+        val response = provider.service().fetchSalariesByEmployeeId(
             employeeId = id
         ).execute()
         return if (response.isSuccessful) {
