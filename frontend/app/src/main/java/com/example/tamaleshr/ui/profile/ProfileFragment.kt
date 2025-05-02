@@ -4,40 +4,78 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.tamaleshr.databinding.FragmentProfileBinding
-
+import com.example.tamaleshr.service.profile.Profile
+import com.example.tamaleshr.ui.BaseUiState
+import com.example.tamaleshr.usecase.DefaultError
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private val viewModel by viewModels<ProfileViewModel> { ProfileViewModel.Factory }
+
+    private val dateFormatter = SimpleDateFormat("MM/dd/yy", Locale.US)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val profileViewModel =
-            ViewModelProvider(this).get(ProfileViewModel::class.java)
-
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textGallery
-        profileViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.uiResultLiveData.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is BaseUiState.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is BaseUiState.Error<Profile, DefaultError> -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Failed to load profile.", Toast.LENGTH_SHORT).show()
+                }
+                is BaseUiState.Success<Profile, DefaultError> -> {
+                    binding.progressBar.visibility = View.GONE
+                    val profile = state.data
+
+                    binding.tvEmpNo.text = "Employee Number: ${profile?.emp_no ?: "N/A"}"
+                    binding.tvFullName.text = "Full Name: ${profile?.fullName() ?: "N/A"}"
+                    binding.tvGender.text = "Gender: ${genderToString(profile?.gender)}"
+                    binding.tvBirthDate.text = "Birthdate: ${formatDate(profile?.birth_date)}"
+                    binding.tvTitle.text = "Title: ${profile?.title ?: "N/A"}"
+                    binding.tvDepartment.text = "Department: ${profile?.department_name ?: "N/A"}"
+                    binding.tvHireDate.text = "Hiredate: ${formatDate(profile?.hire_date)}"
+                }
+            }
         }
-        return root
+
+        viewModel.fetchProfile()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun genderToString(gender: Int?): String {
+        return when (gender) {
+            1 -> "Male"
+            2 -> "Female"
+            else -> "Other"
+        }
+    }
+
+    private fun formatDate(date: java.util.Date?): String {
+        return date?.let { dateFormatter.format(it) } ?: "N/A"
     }
 }
