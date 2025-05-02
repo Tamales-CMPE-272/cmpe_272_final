@@ -12,15 +12,11 @@ class ProfileRepository(
 ) : Repository<ProfileService> {
 
     suspend fun findEmployeeById(id: String): Response<Profile> {
-        val response = provider.service().fetchGradesByAssignment(
-            employeeId = id
-        ).execute()
-        return if (response.isSuccessful) {
-            response
-        } else {
-            val error = response.errorBody()
-                ?: throw IllegalAccessException("Response did not return error")
-            Response.error(response.code(), error)
+        return try {
+            val profile = provider.service().fetchProfileById(id)
+            Response.success(profile)
+        } catch (e: Exception) {
+            Response.error(500, okhttp3.ResponseBody.create(null, "Error fetching profile"))
         }
     }
 

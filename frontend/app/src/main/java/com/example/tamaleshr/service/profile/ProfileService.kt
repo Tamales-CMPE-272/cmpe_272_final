@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 interface ProfileService {
     @GET("/tamalesHr/profile/{employeeId}")
-    fun fetchGradesByAssignment(
+    suspend fun fetchProfileById(
         @Path("employeeId") employeeId: String,
-    ): Call<Profile>
+    ): Profile
 }
