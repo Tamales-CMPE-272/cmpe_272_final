@@ -39,10 +39,8 @@ public class MainController {
 
     Employee employee = empOpt.get();
 
-    // Directly querying Title and DepartmentEmployee using custom queries
-    String title = titleRepository.findByEmpNo(id.intValue())
-      .map(Title::getTitle)
-      .orElse(null);
+    List<Title> titles = titleRepository.findByEmpNoOrderByToDateDesc(id.intValue());
+    String title = titles.isEmpty() ? null : titles.get(0).getTitle();
 
     String deptName = deptEmpRepository.findByEmpNo(id.intValue())
       .stream()
