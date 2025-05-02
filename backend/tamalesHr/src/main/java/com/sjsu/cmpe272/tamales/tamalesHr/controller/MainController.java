@@ -53,6 +53,7 @@ public class MainController {
       .orElse(null);
 
     Profile profile = new Profile(
+        employee.getEmp_no(),
         employee.getFirst_name(),
         employee.getLast_name(),
         employee.getGender(),

@@ -3,6 +3,7 @@ package com.sjsu.cmpe272.tamales.tamalesHr.dto;
 import java.util.Date;
 
 public class Profile {
+    private Integer emp_no;
     private String first_name;
     private String last_name;
     private Integer gender;
@@ -13,7 +14,8 @@ public class Profile {
 
     public Profile() {}
 
-    public Profile(String first_name, String last_name, Integer gender, Date birth_date, Date hire_date, String title, String department_name) {
+    public Profile(Integer emp_no, String first_name, String last_name, Integer gender, Date birth_date, Date hire_date, String title, String department_name) {
+        this.emp_no = emp_no;
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender = gender;
@@ -21,6 +23,14 @@ public class Profile {
         this.hire_date = hire_date;
         this.title = title;
         this.department_name = department_name;
+    }
+
+    public Integer getEmp_no() {
+        return emp_no;
+    }
+
+    public void setEmp_no(Integer emp_no) {
+        this.emp_no = emp_no;
     }
 
     public String getFirst_name() {
