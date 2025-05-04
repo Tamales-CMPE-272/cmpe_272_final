@@ -11,8 +11,8 @@ class Profile(
     val gender: Int? = null,
     val birth_date: Date? = null,
     val hire_date: Date? = null,
-    val title: String? = null,
-    val department_name: String? = null,
+    val titles: List<String>? = null,
+    val department_names: List<String>? = null,
 ){
     fun initials(): String {
         val firstInitial = first_name?.trim()?.firstOrNull()?.uppercase().orEmpty()

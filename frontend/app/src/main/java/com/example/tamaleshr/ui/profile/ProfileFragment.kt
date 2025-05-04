@@ -48,13 +48,13 @@ class ProfileFragment : Fragment() {
                     binding.progressBar.visibility = View.GONE
                     val profile = state.data
 
-                    binding.tvEmpNo.text = "Employee Number: ${profile?.emp_no ?: "N/A"}"
-                    binding.tvFullName.text = "Full Name: ${profile?.fullName() ?: "N/A"}"
-                    binding.tvGender.text = "Gender: ${genderToString(profile?.gender)}"
-                    binding.tvBirthDate.text = "Birthdate: ${formatDate(profile?.birth_date)}"
-                    binding.tvTitle.text = "Title: ${profile?.title ?: "N/A"}"
-                    binding.tvDepartment.text = "Department: ${profile?.department_name ?: "N/A"}"
-                    binding.tvHireDate.text = "Hiredate: ${formatDate(profile?.hire_date)}"
+                    binding.tvEmpNo.text = "${profile?.emp_no ?: "N/A"}"
+                    binding.tvFullName.text = "${profile?.fullName() ?: "N/A"}"
+                    binding.tvGender.text = "${genderToString(profile?.gender)}"
+                    binding.tvBirthDate.text = "${formatDate(profile?.birth_date)}"
+                    binding.tvHireDate.text = "${formatDate(profile?.hire_date)}"
+                    binding.tvTitles.text = "${profile?.titles?.joinToString(", ") ?: "N/A"}"
+                    binding.tvDepartments.text = "${profile?.department_names?.joinToString(", ") ?: "N/A"}"
                 }
             }
         }
