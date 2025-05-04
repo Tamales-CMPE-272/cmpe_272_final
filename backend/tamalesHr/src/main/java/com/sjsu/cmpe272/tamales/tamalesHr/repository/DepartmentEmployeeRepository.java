@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface DepartmentEmployeeRepository extends JpaRepository<DepartmentEmployee, Long> {
 
-    @Query("SELECT de FROM DepartmentEmployee de WHERE de.id.emp_no = :emp_no")
+    @Query("SELECT de FROM DepartmentEmployee de WHERE de.id.emp_no = :emp_no ORDER BY de.to_date DESC")
     List<DepartmentEmployee> findByEmpNo(@Param("emp_no") Integer emp_no);
 }

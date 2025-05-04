@@ -34,34 +34,38 @@ public class MainController {
 
   @GetMapping("/profile/{id}")
   public ResponseEntity<Profile> getProfile(@PathVariable Long id) {
-    Optional<Employee> empOpt = employeeRepository.findById(id);
-    if (empOpt.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      Optional<Employee> empOpt = employeeRepository.findById(id);
+      if (empOpt.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-    Employee employee = empOpt.get();
+      Employee employee = empOpt.get();
 
-    List<Title> titles = titleRepository.findByEmpNoOrderByToDateDesc(id.intValue());
-    String title = titles.isEmpty() ? null : titles.get(0).getTitle();
+      List<Title> titles = titleRepository.findByEmpNoOrderByToDateDesc(id.intValue());
+      List<String> titleNames = titles.stream()
+                                      .map(Title::getTitle)
+                                      .distinct()
+                                      .toList();
 
-    String deptName = deptEmpRepository.findByEmpNo(id.intValue())
-      .stream()
-      .findFirst()
-      .map(deptEmp -> deptEmp.getDept_no())
-      .flatMap(deptNo -> departmentRepository.findById(deptNo))
-      .map(Department::getDept_name)
-      .orElse(null);
+      List<DepartmentEmployee> deptEmps = deptEmpRepository.findByEmpNo(id.intValue());
+      List<String> deptNames = deptEmps.stream()
+                                      .map(DepartmentEmployee::getDept_no)
+                                      .map(deptNo -> departmentRepository.findById(deptNo))
+                                      .filter(Optional::isPresent)
+                                      .map(Optional::get)
+                                      .map(Department::getDept_name)
+                                      .distinct()
+                                      .toList();
 
-    Profile profile = new Profile(
-        employee.getEmp_no(),
-        employee.getFirst_name(),
-        employee.getLast_name(),
-        employee.getGender(),
-        employee.getBirth_date(),
-        employee.getHire_date(),
-        title,
-        deptName
-    );
+      Profile profile = new Profile(
+          employee.getEmp_no(),
+          employee.getFirst_name(),
+          employee.getLast_name(),
+          employee.getGender(),
+          employee.getBirth_date(),
+          employee.getHire_date(),
+          titleNames,
+          deptNames
+      );
 
-    return new ResponseEntity<>(profile, HttpStatus.OK);
+      return new ResponseEntity<>(profile, HttpStatus.OK);
   }
-
 }

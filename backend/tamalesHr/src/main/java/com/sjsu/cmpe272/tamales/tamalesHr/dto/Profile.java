@@ -1,5 +1,6 @@
 package com.sjsu.cmpe272.tamales.tamalesHr.dto;
 
+import java.util.List;
 import java.util.Date;
 
 public class Profile {
@@ -9,20 +10,20 @@ public class Profile {
     private Integer gender;
     private Date birth_date;
     private Date hire_date;
-    private String title;
-    private String department_name;
+    private List<String> titles;
+    private List<String> department_names;
 
     public Profile() {}
 
-    public Profile(Integer emp_no, String first_name, String last_name, Integer gender, Date birth_date, Date hire_date, String title, String department_name) {
+    public Profile(Integer emp_no, String first_name, String last_name, Integer gender, Date birth_date, Date hire_date, List<String> titles, List<String> department_names) {
         this.emp_no = emp_no;
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender = gender;
         this.birth_date = birth_date;
         this.hire_date = hire_date;
-        this.title = title;
-        this.department_name = department_name;
+        this.titles = titles;
+        this.department_names = department_names;
     }
 
     public Integer getEmp_no() {
@@ -73,20 +74,20 @@ public class Profile {
         this.hire_date = hire_date;
     }
 
-    public String getTitle() {
-        return title;
+    public List<String> getTitles() {
+        return titles;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitles(List<String> titles) {
+        this.titles = titles;
     }
 
-    public String getDepartment_name() {
-        return department_name;
+    public List<String> getDepartment_names() {
+        return department_names;
     }
 
-    public void setDepartment_name(String department_name) {
-        this.department_name = department_name;
+    public void setDepartment_names(List<String> department_names) {
+        this.department_names = department_names;
     }
 }
 
