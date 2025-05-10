@@ -70,21 +70,62 @@ public class MainController {
       return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
+  @PutMapping("/employee/dept/update/{emp_no}/{dept_no}")
+  public ResponseEntity<String> updateEmployeeDepartment(
+          @PathVariable Integer emp_no,
+          @PathVariable String dept_no
+  ) {
+      if (!employeeRepository.existsById(emp_no.longValue())) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found.");
+      }
+      if (!departmentRepository.existsById(dept_no)) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Department not found.");
+      }
+
+      List<DepartmentEmployee> assignments = deptEmpRepository.findByEmpNo(emp_no);
+      DepartmentEmployee current = assignments.stream()
+          .filter(de -> de.getTo_date().toString().startsWith("9999"))
+          .findFirst()
+          .orElse(null);
+      if (current == null) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No current department assignment found.");
+      }
+      Date today = new Date();
+      current.setTo_date(today);
+      deptEmpRepository.save(current);
+
+      DepartmentEmployee newAssignment = new DepartmentEmployee();
+      newAssignment.setEmp_no(emp_no);
+      newAssignment.setDept_no(dept_no);
+      newAssignment.setFrom_date(today);
+      Calendar cal = Calendar.getInstance();
+      cal.set(9999, Calendar.JANUARY, 1, 0, 0, 0);
+      cal.set(Calendar.MILLISECOND, 0);
+      newAssignment.setTo_date(cal.getTime());
+
+      deptEmpRepository.save(newAssignment);
+
+      return ResponseEntity.ok("Department updated successfully.");
+  }
+
   @GetMapping(path = "/salary/{employee_id}")
-  public @ResponseBody ResponseEntity<List<SalaryDTO>> getSalaryByEmployeeId(@PathVariable Long employee_id) {
+  public @ResponseBody ResponseEntity<List<SalaryDTO>> getSalaryByEmployeeId(
+      @PathVariable Long employee_id) {
     List<Salary> salaries = salaryRepository.findByIdEmpNo(employee_id);
 
     if (salaries.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
 
-    List<SalaryDTO> dtoList = salaries.stream()
-            .map(s -> new SalaryDTO(
-                    s.getId().getEmpNo(),
-                    s.getId().getFrom_date(),
-                    s.getTo_date(),
-                    s.getSalary()
-            ))
+    List<SalaryDTO> dtoList =
+        salaries.stream()
+            .map(
+                s ->
+                    new SalaryDTO(
+                        s.getId().getEmpNo(),
+                        s.getId().getFrom_date(),
+                        s.getTo_date(),
+                        s.getSalary()))
             .toList();
 
     return ResponseEntity.ok(dtoList);
