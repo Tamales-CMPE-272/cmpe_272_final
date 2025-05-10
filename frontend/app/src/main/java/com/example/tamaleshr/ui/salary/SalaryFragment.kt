@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.tamaleshr.databinding.FragmentSalaryBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tamaleshr.ui.salary.SalaryAdapter
 
 class SalaryFragment : Fragment() {
 
@@ -22,17 +24,26 @@ class SalaryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val salaryViewModel =
-            ViewModelProvider(this).get(SalaryViewModel::class.java)
-
         _binding = FragmentSalaryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textSlideshow
-        salaryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Setup RecyclerView
+        val adapter = SalaryAdapter()
+        binding.salaryList.layoutManager = LinearLayoutManager(requireContext())
+        binding.salaryList.adapter = adapter
+
+        val viewModel = ViewModelProvider(this).get(SalaryViewModel::class.java)
+        val employeeId = arguments?.getString("empId") ?: "10004"
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            if (state is SalaryUiState.Success) {
+                adapter.submitList(state.salaries)
+            }
         }
-        return root
+        // Trigger data fetch
+        viewModel.fetchSalary(employeeId)
     }
 
     override fun onDestroyView() {
