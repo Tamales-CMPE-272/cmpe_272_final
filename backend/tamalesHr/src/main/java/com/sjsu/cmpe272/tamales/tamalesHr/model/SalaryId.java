@@ -9,23 +9,23 @@ import java.time.LocalDate;
 public class SalaryId implements Serializable {
 
     @Column(name = "emp_no")
-    private Long empNo;
+    private Integer empNo;
 
     @Column(name = "from_date")
     private LocalDate from_date;
 
     public SalaryId() {}
 
-    public SalaryId(Long empNo, LocalDate from_date) {
+    public SalaryId(Integer empNo, LocalDate from_date) {
         this.empNo = empNo;
         this.from_date = from_date;
     }
 
-    public Long getEmpNo() {
+    public Integer getEmpNo() {
         return empNo;
     }
 
-    public void setEmpNo(Long empNo) {
+    public void setEmpNo(Integer empNo) {
         this.empNo = empNo;
     }
 

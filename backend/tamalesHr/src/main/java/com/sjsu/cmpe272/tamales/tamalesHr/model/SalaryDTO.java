@@ -4,25 +4,25 @@ import java.time.LocalDate;
 
 public class SalaryDTO {
 
-    private Long empNo;
+    private Integer empNo;
     private LocalDate fromDate;
     private LocalDate toDate;
-    private Double salary;
+    private Integer salary;
 
     public SalaryDTO() {}
 
-    public SalaryDTO(Long empNo, LocalDate fromDate, LocalDate toDate, Double salary) {
+    public SalaryDTO(Integer empNo, LocalDate fromDate, LocalDate toDate, Integer salary) {
         this.empNo = empNo;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.salary = salary;
     }
 
-    public Long getEmpNo() {
+    public Integer getEmpNo() {
         return empNo;
     }
 
-    public void setEmpNo(Long empNo) {
+    public void setEmpNo(Integer empNo) {
         this.empNo = empNo;
     }
 
@@ -42,11 +42,11 @@ public class SalaryDTO {
         this.toDate = toDate;
     }
 
-    public Double getSalary() {
+    public Integer getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(Integer salary) {
         this.salary = salary;
     }
 }
