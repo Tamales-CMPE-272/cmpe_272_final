@@ -15,11 +15,9 @@ RUN curl -L -o keycloak.zip https://github.com/keycloak/keycloak/releases/downlo
 ENV PATH="/opt/keycloak/bin:$PATH"
 WORKDIR /opt/keycloak
 
-# 🔁 Copy the Quarkus SPI JAR (NOT the fat JAR)
+
 COPY ./build/quarkus-app/app/*.jar /opt/keycloak/providers
 
-# 🔁 Copy all runtime dependencies (including MySQL driver)
-# COPY ./build/quarkus-app/lib/main/*.jar /opt/keycloak/providers
 COPY ./build/quarkus-app/lib/main/io.smallrye.jandex-3.1.6.jar /opt/keycloak/providers
 COPY ./build/quarkus-app/lib/main/com.mysql.mysql-connector-j-8.3.0.jar /opt/keycloak/providers
 COPY ./build/quarkus-app/lib/main/io.quarkus.quarkus-jdbc-mysql-3.8.4.jar /opt/keycloak/providers
