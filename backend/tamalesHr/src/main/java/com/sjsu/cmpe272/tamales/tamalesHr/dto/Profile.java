@@ -1,5 +1,7 @@
 package com.sjsu.cmpe272.tamales.tamalesHr.dto;
 
+import com.sjsu.cmpe272.tamales.tamalesHr.model.Gender;
+
 import java.util.List;
 import java.util.Date;
 
@@ -7,7 +9,7 @@ public class Profile {
     private Integer emp_no;
     private String first_name;
     private String last_name;
-    private Integer gender;
+    private Gender gender;
     private Date birth_date;
     private Date hire_date;
     private List<String> titles;
@@ -15,7 +17,7 @@ public class Profile {
 
     public Profile() {}
 
-    public Profile(Integer emp_no, String first_name, String last_name, Integer gender, Date birth_date, Date hire_date, List<String> titles, List<String> department_names) {
+    public Profile(Integer emp_no, String first_name, String last_name, Gender gender, Date birth_date, Date hire_date, List<String> titles, List<String> department_names) {
         this.emp_no = emp_no;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -50,11 +52,11 @@ public class Profile {
         this.last_name = last_name;
     }
 
-    public Integer getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

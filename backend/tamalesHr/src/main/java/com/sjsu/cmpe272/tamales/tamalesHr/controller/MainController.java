@@ -16,6 +16,7 @@ public class MainController {
   @Autowired private TitleRepository titleRepository;
   @Autowired private DepartmentEmployeeRepository deptEmpRepository;
   @Autowired private DepartmentRepository departmentRepository;
+  @Autowired private SalaryRepository salaryRepository;
 
   @GetMapping(path = "/employees")
   public @ResponseBody Iterable<Employee> getAllUsers() {
@@ -105,5 +106,28 @@ public class MainController {
       deptEmpRepository.save(newAssignment);
 
       return ResponseEntity.ok("Department updated successfully.");
+  }
+
+  @GetMapping(path = "/salary/{employee_id}")
+  public @ResponseBody ResponseEntity<List<SalaryDTO>> getSalaryByEmployeeId(
+      @PathVariable Long employee_id) {
+    List<Salary> salaries = salaryRepository.findByIdEmpNo(employee_id);
+
+    if (salaries.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    List<SalaryDTO> dtoList =
+        salaries.stream()
+            .map(
+                s ->
+                    new SalaryDTO(
+                        s.getId().getEmpNo(),
+                        s.getId().getFrom_date(),
+                        s.getTo_date(),
+                        s.getSalary()))
+            .toList();
+
+    return ResponseEntity.ok(dtoList);
   }
 }

@@ -11,6 +11,7 @@ public class Title {
     @EmbeddedId
     private TitleId id;
 
+    @Temporal(TemporalType.DATE)
     private Date to_date;
 
     public Title() {}

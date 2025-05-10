@@ -30,6 +30,7 @@ private fun buildRetrofitClient(): Retrofit {
 
 fun buildMoshi(): Moshi {
     return Moshi.Builder()
+        .add(com.example.tamaleshr.service.LocalDateAdapter)
         .add(DateJsonAdapter())
         .add(KotlinJsonAdapterFactory())
         .build()

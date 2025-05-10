@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "departments")
 public class Department {
+
     @Id
+    @Column(name = "dept_no", columnDefinition = "CHAR(4)")
     private String dept_no;
+
     private String dept_name;
 
     public Department() {
