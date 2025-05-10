@@ -1,6 +1,8 @@
 package com.sjsu.cmpe272.tamales.tamalesHr.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,6 +10,8 @@ import java.util.Objects;
 @Embeddable
 public class DepartmentEmployeeId implements Serializable {
     private Integer emp_no;
+
+    @Column(name = "dept_no", columnDefinition = "CHAR(4)")
     private String dept_no;
 
     public DepartmentEmployeeId() {}

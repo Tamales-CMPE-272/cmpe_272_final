@@ -10,10 +10,14 @@ public class Employee {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer emp_no;
+    @Temporal(TemporalType.DATE)
     private Date birth_date;
     private String first_name;
     private String last_name;
-    private Integer gender;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false, columnDefinition = "ENUM('M','F')")
+    private Gender gender;
+    @Temporal(TemporalType.DATE)
     private Date hire_date;
 
     public Employee() {
@@ -59,11 +63,11 @@ public class Employee {
         this.hire_date = hire_date;
     }
 
-    public Integer getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 }

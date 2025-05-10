@@ -1,6 +1,9 @@
 package com.sjsu.cmpe272.tamales.tamalesHr.model;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Date;
@@ -9,6 +12,7 @@ import java.util.Date;
 public class TitleId implements Serializable {
     private Integer emp_no;
     private String title;
+    @Temporal(TemporalType.DATE)
     private Date from_date;
 
     public TitleId() {}

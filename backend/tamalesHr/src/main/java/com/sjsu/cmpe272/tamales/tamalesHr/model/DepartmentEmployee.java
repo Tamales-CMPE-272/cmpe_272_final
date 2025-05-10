@@ -11,7 +11,10 @@ public class DepartmentEmployee {
     @EmbeddedId
     private DepartmentEmployeeId id;
 
+    @Temporal(TemporalType.DATE)
     private Date from_date;
+
+    @Temporal(TemporalType.DATE)
     private Date to_date;
 
     public DepartmentEmployee() {}

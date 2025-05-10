@@ -9,12 +9,12 @@ public class Salary {
 
     @EmbeddedId
     private SalaryId id;
-    private Double salary;
+    private Integer salary;
     private LocalDate to_date;
 
     public Salary() {}
 
-    public Salary(SalaryId id, Double salary, LocalDate to_date) {
+    public Salary(SalaryId id, Integer salary, LocalDate to_date) {
         this.id = id;
         this.salary = salary;
         this.to_date = to_date;
@@ -28,11 +28,11 @@ public class Salary {
         this.id = id;
     }
 
-    public Double getSalary() {
+    public Integer getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(Integer salary) {
         this.salary = salary;
     }
 
