@@ -33,7 +33,7 @@ class SalaryAdapter :
         private val salary: TextView    = itemView.findViewById(R.id.salary)
 
         fun bind(item: Salary) {
-            empNo.text    = item.empNo?.toString() ?: "-"
+            empNo.text    = itemView.context.getString(R.string.home_emp_no, item.empNo.toString()) ?: "-"
             fromDate.text = item.fromDate?.toString() ?: "-"
             toDate.text   = item.toDate?.toString() ?: "-"
             salary.text   = item.salary?.toString() ?: "-"

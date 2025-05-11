@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
@@ -16,5 +17,19 @@
             android:id="@+id/nav_salary"
             android:icon="@drawable/ic_salary"
             android:title="@string/menu_salary" />
+        <item
+            android:id="@+id/nav_department"
+            android:icon="@drawable/ic_manage"
+            android:title="@string/manage_department" />
     </group>
+
+    <!-- Divider -->
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/logout" />
+        </menu>
+    </item>
 </menu>

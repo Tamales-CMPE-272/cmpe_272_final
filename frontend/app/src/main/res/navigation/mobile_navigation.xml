@@ -24,4 +24,11 @@
         android:label="@string/menu_salary"
         tools:layout="@layout/fragment_salary" >
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_department"
+        android:name="com.example.tamaleshr.ui.department.DepartmentFragment"
+        android:label="@string/manage"
+        tools:layout="@layout/fragment_department" >
+    </fragment>
 </navigation>

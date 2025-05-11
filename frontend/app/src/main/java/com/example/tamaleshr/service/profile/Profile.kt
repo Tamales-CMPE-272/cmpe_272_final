@@ -8,7 +8,6 @@ class Profile(
     val emp_no: Int? = null,
     val first_name: String? = null,
     val last_name: String? = null,
-    val gender: Int? = null,
     val birth_date: Date? = null,
     val hire_date: Date? = null,
     val titles: List<String>? = null,

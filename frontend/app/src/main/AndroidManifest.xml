@@ -16,15 +16,23 @@
         android:theme="@style/Theme.TamalesHR"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.auth.AuthActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:label="@string/auth"
             android:theme="@style/Theme.TamalesHR.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.TamalesHR.NoActionBar">
         </activity>
     </application>
 

@@ -64,4 +64,10 @@ dependencies {
     implementation(libs.moshi.adapters)
     implementation(libs.converter.moshi)
     implementation(libs.logging.interceptor)
+
+    // Date time
+    implementation(libs.joda.time)
+
+    // encrypted shared preferences
+    implementation(libs.androidx.security.crypto)
 }

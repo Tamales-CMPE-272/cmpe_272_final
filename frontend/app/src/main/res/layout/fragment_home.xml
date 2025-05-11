@@ -107,6 +107,45 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clManage"
+        android:layout_width="0dp"
+        android:background="@drawable/home_box_ripple"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_manage"
+            android:layout_margin="8dp"
+            app:tint="@color/teal_700"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvDepartmentTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/department"
+            android:textColor="@color/teal_700"
+            android:layout_margin="8dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvDepartmentSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:textColor="@color/teal_700"
+            android:text="@string/manager_the_resources_in_your_department"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/flOptionsHome"
@@ -115,7 +154,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="horizontal"
-        app:constraint_referenced_ids="clProfile, clSalary"
+        app:constraint_referenced_ids="clProfile, clSalary, clManage"
         app:flow_horizontalGap="16dp"
         app:flow_maxElementsWrap="2"
         app:flow_verticalGap="16dp"

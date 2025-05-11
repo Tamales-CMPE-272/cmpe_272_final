@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -14,10 +15,14 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.example.tamaleshr.R
 import com.example.tamaleshr.databinding.FragmentHomeBinding
+import com.example.tamaleshr.di.koin
+import com.example.tamaleshr.service.auth.JwtTokenPayload
+import com.example.tamaleshr.service.auth.Role
 import com.example.tamaleshr.service.employee.Employee
 import com.example.tamaleshr.ui.BaseUiState
 import com.example.tamaleshr.ui.MainViewModel
 import com.example.tamaleshr.usecase.DefaultError
+import com.example.tamaleshr.util.AuthTokenManager
 
 class HomeFragment : Fragment() {
 
@@ -27,6 +32,11 @@ class HomeFragment : Fragment() {
         get() = requireView().findNavController()
 
     private var _binding: FragmentHomeBinding? = null
+
+    private val authTokenManager: AuthTokenManager
+        get() = koin.get<AuthTokenManager>()
+    private val jwtTokenPayload: JwtTokenPayload?
+        get() = authTokenManager.decodeJwtPayloadToModel()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -48,6 +58,12 @@ class HomeFragment : Fragment() {
         binding.clSalary.setOnClickListener {
             navController.navigate(R.id.nav_salary)
         }
+
+        binding.clManage.setOnClickListener {
+            navController.navigate(R.id.nav_department)
+        }
+
+        binding.clManage.isVisible = jwtTokenPayload?.role == Role.MANAGER
 
         return root
     }

@@ -15,7 +15,7 @@ class ProfileUseCase(
 ) : UseCase<Profile, ProfileRepository> {
     override suspend fun launch(): Flow<UseCaseResult<Profile, DefaultError>> {
         return try {
-            val response = repository.findEmployeeById(employeeId)
+            val response = repository.fetchProfileById(employeeId)
             val profile = response.body()
             val errorResponse = response.errorBody()
             when {

@@ -1,5 +1,7 @@
 package com.example.tamaleshr.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -18,16 +20,31 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import com.example.tamaleshr.R
 import com.example.tamaleshr.databinding.ActivityMainBinding
+import com.example.tamaleshr.di.koin
+import com.example.tamaleshr.service.auth.JwtTokenPayload
+import com.example.tamaleshr.service.auth.Role
 import com.example.tamaleshr.service.employee.Employee
+import com.example.tamaleshr.ui.auth.AuthActivity
 import com.example.tamaleshr.usecase.DefaultError
+import com.example.tamaleshr.util.AuthTokenManager
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
+    }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel> { MainViewModel.Factory }
     private val navController: NavController
         get() = findNavController(R.id.nav_host_fragment_content_main)
+    private val authTokenManager: AuthTokenManager
+        get() = koin.get<AuthTokenManager>()
+    private val jwtTokenPayload: JwtTokenPayload?
+        get() = authTokenManager.decodeJwtPayloadToModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +57,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_profile, R.id.nav_salary
+                R.id.nav_home,
+                R.id.nav_profile,
+                R.id.nav_salary,
+                R.id.nav_department,
+                R.id.nav_logout
             ), binding.drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
         binding.navView.setNavigationItemSelectedListener(this)
+        binding.navView.menu.findItem(R.id.nav_department)?.isVisible = jwtTokenPayload?.role == Role.MANAGER
 
         // Create an OnBackPressedCallback
         val onBackPressedCallback = object : OnBackPressedCallback(true /* enabled by default */) {
@@ -78,6 +100,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         viewModel.fetchEmployee()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(!authTokenManager.isTokenValid()){
+            logout()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -99,8 +128,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_salary -> {
                 navController.navigate(R.id.nav_salary)
             }
+            R.id.nav_department -> {
+                navController.navigate(R.id.nav_department)
+            }
+            R.id.nav_logout -> {
+                logout()
+            }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun logout() {
+        authTokenManager.clear()
+        routeToAuth()
+    }
+
+    private fun routeToAuth() {
+        val intent = AuthActivity.newIntent(this).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
     }
 }
