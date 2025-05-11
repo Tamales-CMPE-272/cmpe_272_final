@@ -5,6 +5,7 @@ import com.sjsu.cmpe272.tamales.tamalesHr.dto.Profile;
 import com.sjsu.cmpe272.tamales.tamalesHr.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -71,6 +72,7 @@ public class MainController {
   }
 
   @PutMapping("/employee/dept/update/{emp_no}/{dept_no}")
+  @PreAuthorize("hasRole('Manager')")
   public ResponseEntity<String> updateEmployeeDepartment(
           @PathVariable Integer emp_no,
           @PathVariable String dept_no
