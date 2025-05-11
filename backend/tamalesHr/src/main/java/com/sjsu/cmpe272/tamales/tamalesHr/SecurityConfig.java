@@ -20,9 +20,21 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable().authorizeHttpRequests().anyRequest().authenticated();
-    http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthConverter);
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    http.csrf()
+        .disable()
+        .authorizeHttpRequests()
+        .requestMatchers("/auth/token")
+        .permitAll()
+        .anyRequest()
+        .authenticated()
+        .and()
+        .oauth2ResourceServer()
+        .jwt()
+        .jwtAuthenticationConverter(jwtAuthConverter)
+        .and()
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     return http.build();
   }
 }
