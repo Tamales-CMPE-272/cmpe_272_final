@@ -1,6 +1,7 @@
 [versions]
 agp = "8.9.2"
 fragmentTesting = "1.8.6"
+jodaTime = "2.12.5"
 koinCore = "3.5.3"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
@@ -17,11 +18,14 @@ moshi = "1.14.0"
 navigationFragmentKtx = "2.6.0"
 navigationUiKtx = "2.6.0"
 retrofit = "2.9.0"
+securityCrypto = "1.1.0-alpha06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+joda-time = { module = "joda-time:joda-time", version.ref = "jodaTime" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

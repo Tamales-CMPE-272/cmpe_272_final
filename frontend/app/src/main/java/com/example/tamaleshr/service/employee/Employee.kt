@@ -9,7 +9,6 @@ class Employee(
     val birth_date: Date? = null,
     val first_name: String? = null,
     val last_name: String? = null,
-    val gender: Int? = null,
     val hire_date: Date? = null,
 ){
     fun initials(): String {

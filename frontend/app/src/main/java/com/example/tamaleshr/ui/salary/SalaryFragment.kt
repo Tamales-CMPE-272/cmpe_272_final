@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.tamaleshr.databinding.FragmentSalaryBinding
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tamaleshr.di.koin
 import com.example.tamaleshr.ui.salary.SalaryAdapter
+import com.example.tamaleshr.util.AuthTokenManager
 
 class SalaryFragment : Fragment() {
 
@@ -36,7 +38,7 @@ class SalaryFragment : Fragment() {
         binding.salaryList.adapter = adapter
 
         val viewModel = ViewModelProvider(this).get(SalaryViewModel::class.java)
-        val employeeId = arguments?.getString("empId") ?: "10004"
+        val employeeId: String = koin.get<AuthTokenManager>().getUsername()
         viewModel.state.observe(viewLifecycleOwner) { state ->
             if (state is SalaryUiState.Success) {
                 adapter.submitList(state.salaries)

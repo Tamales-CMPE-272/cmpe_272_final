@@ -1,5 +1,8 @@
 package com.example.tamaleshr.di
 
+import android.content.Context
+import com.example.tamaleshr.usecase.auth.AuthInterceptor
+import com.example.tamaleshr.util.AuthTokenManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -8,12 +11,18 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-const val KEY_BASE_URL = "http://10.0.2.2:8080"
+const val KEY_BASE_URL = "http://10.0.2.2:9090"
 
 val serviceModule = module {
     single {
         buildRetrofitClient()
     }
+}
+
+fun authTokenManager(context: Context) = module {
+   single {
+       AuthTokenManager(context)
+   }
 }
 
 private fun buildRetrofitClient(): Retrofit {
@@ -31,7 +40,7 @@ private fun buildRetrofitClient(): Retrofit {
 fun buildMoshi(): Moshi {
     return Moshi.Builder()
         .add(com.example.tamaleshr.service.LocalDateAdapter)
-        .add(DateJsonAdapter())
+        .add(ShortDateJsonAdapter())
         .add(KotlinJsonAdapterFactory())
         .build()
 }
@@ -42,5 +51,6 @@ private fun buildOkHttpClient(): OkHttpClient {
     }
     return OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .addInterceptor(AuthInterceptor())
         .build()
 }

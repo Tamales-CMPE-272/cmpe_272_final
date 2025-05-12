@@ -16,6 +16,7 @@ import com.example.tamaleshr.usecase.UseCaseResult
 import com.example.tamaleshr.usecase.profile.ProfileUseCase
 import com.example.tamaleshr.usecase.failure
 import com.example.tamaleshr.usecase.success
+import com.example.tamaleshr.util.AuthTokenManager
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -29,7 +30,7 @@ class ProfileViewModel(
     val uiResultLiveData: LiveData<BaseUiState<Profile, DefaultError>>
         get() = _uiResultLiveData
 
-    fun fetchProfile(employeeId: String = "10004"){
+    fun fetchProfile(employeeId: String = koin.get<AuthTokenManager>().getUsername()){
         _uiResultLiveData.value = BaseUiState.Loading()
         viewModelScope.launch(dispatcher) {
             ProfileUseCase(

@@ -11,7 +11,7 @@ class ProfileRepository(
     override val provider: ServiceProvider<ProfileService>
 ) : Repository<ProfileService> {
 
-    suspend fun findEmployeeById(id: String): Response<Profile> {
+    suspend fun fetchProfileById(id: String): Response<Profile> {
         return try {
             val profile = provider.service().fetchProfileById(id)
             Response.success(profile)

@@ -50,7 +50,6 @@ class ProfileFragment : Fragment() {
 
                     binding.tvEmpNo.text = "${profile?.emp_no ?: "N/A"}"
                     binding.tvFullName.text = "${profile?.fullName() ?: "N/A"}"
-                    binding.tvGender.text = "${genderToString(profile?.gender)}"
                     binding.tvBirthDate.text = "${formatDate(profile?.birth_date)}"
                     binding.tvHireDate.text = "${formatDate(profile?.hire_date)}"
                     binding.tvTitles.text = "${profile?.titles?.joinToString(", ") ?: "N/A"}"
@@ -65,14 +64,6 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun genderToString(gender: Int?): String {
-        return when (gender) {
-            1 -> "Male"
-            2 -> "Female"
-            else -> "Other"
-        }
     }
 
     private fun formatDate(date: java.util.Date?): String {

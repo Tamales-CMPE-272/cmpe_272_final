@@ -14,6 +14,7 @@ import com.example.tamaleshr.usecase.UseCaseResult
 import com.example.tamaleshr.usecase.employee.EmployeeUseCase
 import com.example.tamaleshr.usecase.failure
 import com.example.tamaleshr.usecase.success
+import com.example.tamaleshr.util.AuthTokenManager
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +28,7 @@ class MainViewModel(
     val uiResultLiveData: LiveData<BaseUiState<Employee, DefaultError>>
         get() = _uiResultLiveData
 
-    fun fetchEmployee(employeeId: String = "10004"){
+    fun fetchEmployee(employeeId: String = koin.get<AuthTokenManager>().getUsername()){
         _uiResultLiveData.value = BaseUiState.Loading()
         viewModelScope.launch(dispatcher) {
             EmployeeUseCase(
