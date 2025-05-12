@@ -274,7 +274,7 @@ public class MySQLUserStorageProvider implements UserStorageProvider,
     private boolean isManager(String empNo) {
         try {
             long count = ((Number) entityManager
-                    .createNativeQuery("SELECT COUNT(*) FROM dept_manager WHERE emp_no = :empNo")
+                    .createNativeQuery("SELECT COUNT(*) FROM dept_manager WHERE emp_no = :empNo AND to_date = '9999-01-01'")
                     .setParameter("empNo", Integer.parseInt(empNo))
                     .getSingleResult()).longValue();
             return count > 0;

@@ -2,6 +2,8 @@ package com.example.tamaleshr.di
 
 import android.content.Context
 import com.example.tamaleshr.service.auth.AuthRepository
+import com.example.tamaleshr.service.department.Department
+import com.example.tamaleshr.service.department.DepartmentRepository
 import com.example.tamaleshr.service.employee.EmployeeRepository
 import com.example.tamaleshr.service.profile.ProfileRepository
 import org.koin.core.Koin
@@ -14,6 +16,7 @@ fun appModule(context: Context) = module {
     includes(AuthRepository.koinModule())
     includes(EmployeeRepository.koinModule())
     includes(ProfileRepository.koinModule())
+    includes(DepartmentRepository.koinModule())
 }
 
 val koin: Koin

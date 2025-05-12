@@ -2,6 +2,7 @@ package com.sjsu.cmpe272.tamales.tamalesHr.model;
 
 import jakarta.persistence.*;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -16,6 +17,16 @@ public class DepartmentEmployee {
 
     @Temporal(TemporalType.DATE)
     private Date to_date;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "emp_no",
+            referencedColumnName = "emp_no",
+            insertable = false,
+            updatable = false,
+            foreignKey = @ForeignKey(name = "dept_emp_ibfk_1") // <-- Corrected foreign key name
+    )
+    private Employee employee;
 
     public DepartmentEmployee() {}
 
@@ -59,5 +70,23 @@ public class DepartmentEmployee {
 
     public void setTo_date(Date to_date) {
         this.to_date = to_date;
+    }
+
+    public void setId(DepartmentEmployeeId id) {
+        this.id = id;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Boolean isCurrentlyEnrolled(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(getTo_date());
+        return calendar.get(Calendar.YEAR) == 9999;
     }
 }

@@ -2,6 +2,7 @@ package com.sjsu.cmpe272.tamales.tamalesHr.model;
 
 import jakarta.persistence.*;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -95,5 +96,11 @@ public class DeptManager {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public Boolean isCurrentlyEnrolled(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(getTo_date());
+        return calendar.get(Calendar.YEAR) == 9999;
     }
 }

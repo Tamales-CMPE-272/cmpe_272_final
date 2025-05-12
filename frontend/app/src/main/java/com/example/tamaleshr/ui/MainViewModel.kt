@@ -27,6 +27,8 @@ class MainViewModel(
     private val _uiResultLiveData = MutableLiveData<BaseUiState<Employee, DefaultError>>()
     val uiResultLiveData: LiveData<BaseUiState<Employee, DefaultError>>
         get() = _uiResultLiveData
+    private val authTokenManager: AuthTokenManager
+        get() = koin.get<AuthTokenManager>()
 
     fun fetchEmployee(employeeId: String = koin.get<AuthTokenManager>().getUsername()){
         _uiResultLiveData.value = BaseUiState.Loading()
@@ -42,6 +44,7 @@ class MainViewModel(
                        }
                     }
                     is UseCaseResult.Success<Employee, DefaultError> -> {
+                        authTokenManager.saveDeptId(result.data?.managerData)
                         viewModelScope.launch {
                             _uiResultLiveData.postValue(result.success())
                         }
