@@ -14,4 +14,5 @@
     <color name="platinum">#FFF6F3</color>
     <color name="azure">#daecec</color>
     <color name="dark_azure">#96A4A4</color>
+    <color name="light_gray">#ddd</color>
 </resources>

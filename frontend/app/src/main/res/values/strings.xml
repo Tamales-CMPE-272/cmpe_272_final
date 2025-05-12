@@ -14,6 +14,7 @@
 
     <string name="home_title">Welcome</string>
     <string name="home_subtitle">Let\'s manage your data</string>
+    <string name="full_name_placeholder">%1$s %2$s</string>
     <string name="home_emp_no">Emp No: %1$s</string>
     <string name="home_emp_welcome">Welcome %1$s!</string>
 
@@ -34,4 +35,19 @@
     <string name="department">Department</string>
     <string name="manager_the_resources_in_your_department">Manager the resources in your department</string>
     <string name="logout">Logout</string>
+    <string name="add_employee">Add Employee</string>
+    <string name="remove_employee">Remove Employee</string>
+    <string name="search_for_an_employee">Search by employee number</string>
+    <string name="enter_employee_no">Enter Employee No</string>
+    <string name="add">Add</string>
+    <string name="invalid_employee_number">Invalid Employee Number</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_employee_title">Add Employee</string>
+    <string name="remove_employee_title">Remove Employee</string>
+    <string name="are_you_sure_you_want_to_remove">Are you sure you want to remove employee %1$s?</string>
+    <string name="remove">Remove</string>
+    <string name="cancel_remove">Cancel</string>
+    <string name="no_users_found">No users found</string>
+    <string name="user_was_removed_successfully">User was removed successfully</string>
+    <string name="user_was_added_successfully">User was added successfully</string>
 </resources>

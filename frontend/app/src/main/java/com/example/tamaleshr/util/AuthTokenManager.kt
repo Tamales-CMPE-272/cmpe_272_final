@@ -7,6 +7,7 @@ import androidx.security.crypto.MasterKeys
 import com.example.tamaleshr.service.auth.AuthResponse
 import androidx.core.content.edit
 import com.example.tamaleshr.service.auth.JwtTokenPayload
+import com.example.tamaleshr.service.employee.EmployeeManagementData
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.joda.time.DateTime
@@ -22,6 +23,7 @@ class AuthTokenManager(context: Context) {
         val KEY_EMP_NO = "username"
         val KEY_LAST_TOKEN = "KEY_LAST_TOKEN"
         val KEY_EXPIRES_IN = "KEY_EXPIRES_IN"
+        val KEY_DEPT_ID = "KEY_DEPT_ID"
     }
 
     private val sharedPreferences = EncryptedSharedPreferences.create(
@@ -41,6 +43,14 @@ class AuthTokenManager(context: Context) {
         }
     }
 
+    fun saveDeptId(data: EmployeeManagementData?){
+        if(data != null){
+            sharedPreferences.edit {
+                putString(KEY_DEPT_ID, data.deptNo)
+            }
+        }
+    }
+
     fun isTokenValid(): Boolean{
         val timestamp = sharedPreferences.getString(KEY_LAST_TOKEN, null) ?: return true
         val expiresIn = sharedPreferences.getInt(KEY_EXPIRES_IN, 0)
@@ -57,6 +67,8 @@ class AuthTokenManager(context: Context) {
             putString(KEY_EMP_NO, username)
         }
     }
+
+    fun deptId(): String? = sharedPreferences.getString(KEY_DEPT_ID, null)
 
     fun getAccessToken(): String? = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
 

@@ -6,8 +6,11 @@ import com.sjsu.cmpe272.tamales.tamalesHr.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping(path = "/tamalesHr")
@@ -18,6 +21,7 @@ public class MainController {
   @Autowired private DepartmentEmployeeRepository deptEmpRepository;
   @Autowired private DepartmentRepository departmentRepository;
   @Autowired private SalaryRepository salaryRepository;
+  @Autowired private DepartmentManagerRepository departmentManagerRepository;
 
   @GetMapping(path = "/employees")
   public @ResponseBody Iterable<Employee> getAllUsers() {
@@ -36,78 +40,166 @@ public class MainController {
 
   @GetMapping("/profile/{id}")
   public ResponseEntity<Profile> getProfile(@PathVariable Long id) {
-      Optional<Employee> empOpt = employeeRepository.findById(id);
-      if (empOpt.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    Optional<Employee> empOpt = employeeRepository.findById(id);
+    if (empOpt.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-      Employee employee = empOpt.get();
+    Employee employee = empOpt.get();
 
-      List<Title> titles = titleRepository.findByEmpNoOrderByToDateDesc(id.intValue());
-      List<String> titleNames = titles.stream()
-                                      .map(Title::getTitle)
-                                      .distinct()
-                                      .toList();
+    List<Title> titles = titleRepository.findByEmpNoOrderByToDateDesc(id.intValue());
+    List<String> titleNames = titles.stream().map(Title::getTitle).distinct().toList();
 
-      List<DepartmentEmployee> deptEmps = deptEmpRepository.findByEmpNo(id.intValue());
-      List<String> deptNames = deptEmps.stream()
-                                      .map(DepartmentEmployee::getDept_no)
-                                      .map(deptNo -> departmentRepository.findById(deptNo))
-                                      .filter(Optional::isPresent)
-                                      .map(Optional::get)
-                                      .map(Department::getDept_name)
-                                      .distinct()
-                                      .toList();
+    List<DepartmentEmployee> deptEmps = deptEmpRepository.findByEmpNo(id.intValue());
+    List<String> deptNames =
+        deptEmps.stream()
+            .map(DepartmentEmployee::getDept_no)
+            .map(deptNo -> departmentRepository.findById(deptNo))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(Department::getDept_name)
+            .distinct()
+            .toList();
 
-      Profile profile = new Profile(
-          employee.getEmp_no(),
-          employee.getFirst_name(),
-          employee.getLast_name(),
-          employee.getGender(),
-          employee.getBirth_date(),
-          employee.getHire_date(),
-          titleNames,
-          deptNames
-      );
+    Profile profile =
+        new Profile(
+            employee.getEmp_no(),
+            employee.getFirst_name(),
+            employee.getLast_name(),
+            employee.getGender(),
+            employee.getBirth_date(),
+            employee.getHire_date(),
+            titleNames,
+            deptNames);
 
-      return new ResponseEntity<>(profile, HttpStatus.OK);
+    return new ResponseEntity<>(profile, HttpStatus.OK);
   }
 
-  @PutMapping("/employee/dept/update/{emp_no}/{dept_no}")
+  @GetMapping("/department/{dept_no}")
   @PreAuthorize("hasRole('Manager')")
-  public ResponseEntity<String> updateEmployeeDepartment(
-          @PathVariable Integer emp_no,
-          @PathVariable String dept_no
-  ) {
-      if (!employeeRepository.existsById(emp_no.longValue())) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found.");
-      }
-      if (!departmentRepository.existsById(dept_no)) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Department not found.");
-      }
+  public ResponseEntity<DepartmentData> getDepartmentById(@PathVariable String dept_no) {
+    List<DepartmentEmployee> activeEmployees =
+        deptEmpRepository.findActiveEmployees(dept_no).stream()
+            .filter(DepartmentEmployee::isCurrentlyEnrolled)
+            .toList();
+    Optional<Department> departmentOptional = departmentRepository.findById(dept_no);
+    List<DeptManager> manager =
+            departmentManagerRepository.findDepartmentManager(dept_no).stream()
+                    .filter(DeptManager::isCurrentlyEnrolled)
+                    .toList();
 
-      List<DepartmentEmployee> assignments = deptEmpRepository.findByEmpNo(emp_no);
-      DepartmentEmployee current = assignments.stream()
-          .filter(de -> de.getTo_date().toString().startsWith("9999"))
-          .findFirst()
-          .orElse(null);
-      if (current == null) {
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No current department assignment found.");
-      }
-      Date today = new Date();
+    DepartmentData departmentData;
+
+    if (departmentOptional.isPresent()) {
+      departmentData = new DepartmentData(departmentOptional.get(), activeEmployees, manager);
+      return ResponseEntity.ok(departmentData);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+  }
+
+  @PutMapping("/department/remove/{emp_no}/{dept_no}")
+  @PreAuthorize("hasRole('Manager')")
+  public ResponseEntity<DepartmentData> removeEmployeeDepartment(
+      @PathVariable Integer emp_no, @PathVariable String dept_no) {
+    if (!employeeRepository.existsById(emp_no.longValue())) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    if (!departmentRepository.existsById(dept_no)) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    List<DepartmentEmployee> assignments = deptEmpRepository.findByEmpNo(emp_no);
+    DepartmentEmployee current =
+        assignments.stream()
+            .filter(de -> de.getTo_date().toString().startsWith("9999"))
+            .findFirst()
+            .orElse(null);
+    if (current == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    Date today = new Date();
+    current.setTo_date(today);
+    deptEmpRepository.save(current);
+
+    List<DepartmentEmployee> activeEmployees =
+        deptEmpRepository.findActiveEmployees(dept_no).stream()
+            .filter(DepartmentEmployee::isCurrentlyEnrolled)
+            .toList();
+    Optional<Department> departmentOptional = departmentRepository.findById(dept_no);
+    List<DeptManager> manager =
+        departmentManagerRepository.findDepartmentManager(dept_no).stream()
+            .filter(DeptManager::isCurrentlyEnrolled)
+            .toList();
+
+    DepartmentData departmentData;
+
+    if (departmentOptional.isPresent()) {
+      departmentData = new DepartmentData(departmentOptional.get(), activeEmployees, manager);
+      return ResponseEntity.ok(departmentData);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+  }
+
+  @PutMapping("/department/update/{emp_no}/{dept_no}")
+  @Transactional
+  @PreAuthorize("hasRole('Manager')")
+  public ResponseEntity<DepartmentData> updateEmployeeDepartment(
+      @PathVariable Integer emp_no, @PathVariable String dept_no) {
+    if (!employeeRepository.existsById(emp_no.longValue())) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    if (!departmentRepository.existsById(dept_no)) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    List<DepartmentEmployee> assignments = deptEmpRepository.findByEmpNo(emp_no);
+    DepartmentEmployee current =
+        assignments.stream()
+            .filter(de -> de.getTo_date().toString().startsWith("9999"))
+            .findFirst()
+            .orElse(null);
+    Date today = new Date();
+    if (current != null) {
+      // remove employee from the other department if already there
       current.setTo_date(today);
       deptEmpRepository.save(current);
+    }
 
-      DepartmentEmployee newAssignment = new DepartmentEmployee();
-      newAssignment.setEmp_no(emp_no);
-      newAssignment.setDept_no(dept_no);
-      newAssignment.setFrom_date(today);
-      Calendar cal = Calendar.getInstance();
-      cal.set(9999, Calendar.JANUARY, 1, 0, 0, 0);
-      cal.set(Calendar.MILLISECOND, 0);
-      newAssignment.setTo_date(cal.getTime());
+    DepartmentEmployeeId id = new DepartmentEmployeeId(emp_no, dept_no);
+    DepartmentEmployee newAssignment = new DepartmentEmployee();
+    Employee employee = employeeRepository.getReferenceById(emp_no.longValue());
+    newAssignment.setId(id);
+    newAssignment.setEmp_no(emp_no);
+    newAssignment.setDept_no(dept_no);
+    newAssignment.setFrom_date(today);
+    newAssignment.setEmployee(employee);
+    Calendar cal = Calendar.getInstance();
+    cal.set(9999, Calendar.JANUARY, 1, 0, 0, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    newAssignment.setTo_date(cal.getTime());
 
-      deptEmpRepository.save(newAssignment);
+    deptEmpRepository.save(newAssignment);
 
-      return ResponseEntity.ok("Department updated successfully.");
+    deptEmpRepository.flush();
+
+    List<DepartmentEmployee> activeEmployees =
+        deptEmpRepository.findActiveEmployees(dept_no).stream()
+            .filter(DepartmentEmployee::isCurrentlyEnrolled)
+            .toList();
+    Optional<Department> departmentOptional = departmentRepository.findById(dept_no);
+    List<DeptManager> manager =
+        departmentManagerRepository.findDepartmentManager(dept_no).stream()
+            .filter(DeptManager::isCurrentlyEnrolled)
+            .toList();
+
+    DepartmentData departmentData;
+
+    if (departmentOptional.isPresent()) {
+      departmentData = new DepartmentData(departmentOptional.get(), activeEmployees, manager);
+      return ResponseEntity.ok(departmentData);
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
   }
 
   @GetMapping(path = "/salary/{employee_id}")

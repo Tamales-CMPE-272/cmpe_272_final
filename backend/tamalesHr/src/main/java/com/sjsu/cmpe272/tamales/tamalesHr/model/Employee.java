@@ -3,6 +3,7 @@ package com.sjsu.cmpe272.tamales.tamalesHr.model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
@@ -19,6 +20,13 @@ public class Employee {
     private Gender gender;
     @Temporal(TemporalType.DATE)
     private Date hire_date;
+
+    @OneToMany
+    @JoinColumn(
+            name = "emp_no", // Column in dept_manager table
+            referencedColumnName = "emp_no" // Column in employees table (PK)
+    )
+    private List<EmployeeManager> deptManagers;
 
     public Employee() {
     }
@@ -69,5 +77,13 @@ public class Employee {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public List<EmployeeManager> getDeptManagers() {
+        return deptManagers;
+    }
+
+    public void setDeptManagers(List<EmployeeManager> deptManagers) {
+        this.deptManagers = deptManagers;
     }
 }
