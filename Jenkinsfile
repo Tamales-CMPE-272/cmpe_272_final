@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK 21 SDKMAN'
+        jdk 'JDK 21'
     }
 
     environment {
