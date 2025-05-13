@@ -18,7 +18,13 @@ public class AuthController {
   private final static String KEY_GRANT_TYPE = "grant_type";
   private final static String KEY_PASSWORD = "password";
   private final static String KEY_USERNAME = "username";
-  private final static String KEY_CLIENT_ID = "client_id";;
+  private final static String KEY_CLIENT_ID = "client_id";
+
+  private final RestTemplate restTemplate; // Inject RestTemplate
+
+  public AuthController(RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+  }
 
   @PostMapping("/token")
   public ResponseEntity<?> getToken(@RequestParam String username, @RequestParam String password) {
@@ -34,7 +40,6 @@ public class AuthController {
       HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
 
       try {
-          RestTemplate restTemplate = new RestTemplate();
           ResponseEntity<String> response = restTemplate.postForEntity(TOKEN_URL, entity, String.class);
           return ResponseEntity.ok(response.getBody());
       } catch(Exception e){

@@ -16,6 +16,11 @@ public class Title {
 
     public Title() {}
 
+    public Title(TitleId id, Date to_date) {
+        this.id = id;
+        this.to_date = to_date;
+    }
+
     public Integer getEmp_no() {
         return id != null ? id.getEmp_no() : null;
     }

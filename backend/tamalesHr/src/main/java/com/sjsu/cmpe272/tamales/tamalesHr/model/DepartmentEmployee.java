@@ -30,6 +30,13 @@ public class DepartmentEmployee {
 
     public DepartmentEmployee() {}
 
+    public DepartmentEmployee(DepartmentEmployeeId id, Date from_date, Date to_date, Employee employee) {
+        this.id = id;
+        this.from_date = from_date;
+        this.to_date = to_date;
+        this.employee = employee;
+    }
+
     public Integer getEmp_no() {
         return id != null ? id.getEmp_no() : null;
     }

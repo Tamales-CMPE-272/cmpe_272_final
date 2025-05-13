@@ -15,6 +15,11 @@ public class Department {
     public Department() {
     }
 
+    public Department(String dept_no, String dept_name) {
+        this.dept_no = dept_no;
+        this.dept_name = dept_name;
+    }
+
     public String getDept_no() {
         return dept_no;
     }
