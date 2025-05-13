@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        PATH = "${tool 'JDK 21 SDKMAN'}/bin:${env.PATH}"
+        PATH = "${tool 'JDK 21'}/bin:${env.PATH}"
     }
 
     stages {
