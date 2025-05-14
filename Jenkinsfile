@@ -7,7 +7,7 @@ pipeline {
     }
 
     tools {
-        grade 9.0
+        gradle 9.0
     }
 
     stages {
