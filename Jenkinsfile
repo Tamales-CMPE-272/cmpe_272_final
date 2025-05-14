@@ -1,23 +1,22 @@
 pipeline {
     agent any
 
-    tools {
-        jdk 'JDK 21'
-    }
-
-    environment {
-        PATH = "${tool 'JDK 21'}/bin:${env.PATH}"
-    }
-
     stages {
-        stage('Verify Java Setup') {
+        stage('Install JDK 21 via SDKMAN') {
             steps {
                 sh '''
-                    echo "JAVA_HOME: $JAVA_HOME"
-                    echo "PATH: $PATH"
-                    echo "which java: $(which java)"
-                    echo "java -version (via JAVA_HOME):"
-                    $JAVA_HOME/bin/java -version
+                    # Install SDKMAN if not already installed
+                    curl -s "https://get.sdkman.io" | bash
+                    source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+                    # Install JDK 21 if not already installed
+                    sdk install java 21.0.2-tem || true
+
+                    # Use JDK 21
+                    sdk use java 21.0.2-tem
+
+                    # Verify installation
+                    java -version
                 '''
             }
         }
