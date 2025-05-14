@@ -27,10 +27,16 @@ pipeline {
                     java -version
 
                     gradle --version
+                '''
+            }
+        }
 
-                    gradle wrapper
-
-                    ./gradlew --version
+        stage('Backend Build & Tests') {
+            steps {
+                sh '''
+                    cd backend/tamalesHr
+                    echo "Running Gradle Wrapper build..."
+                    gradle clean test --stacktrace --info
                 '''
             }
         }
