@@ -28,6 +28,8 @@ pipeline {
 
                     gradle --version
 
+                    gradle wrapper
+
                     ./gradlew --version
                 '''
             }
