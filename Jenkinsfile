@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        sdkman_curl_connect_timeout = '60'  // Increase from 7s to 30s
+        sdkman_curl_max_time = '300'        // Increase from 10s to 300s (5 minutes)
+    }
+
     stages {
         stage('Install JDK 21 via SDKMAN') {
             steps {
