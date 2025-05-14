@@ -11,7 +11,7 @@ pipeline {
     }
 
     stages {
-        stage('Install JDK 21 via SDKMAN') {
+        stage('Backend Build & Tests') {
             steps {
                 sh '''
                     # Install SDKMAN if not already installed
@@ -27,15 +27,9 @@ pipeline {
                     java -version
 
                     gradle --version
-                '''
-            }
-        }
 
-        stage('Backend Build & Tests') {
-            steps {
-                sh '''
                     cd backend/tamalesHr
-                    echo "Running Gradle Wrapper build..."
+                    echo "Running Gradle Tests..."
                     gradle clean test --stacktrace --info
                 '''
             }
