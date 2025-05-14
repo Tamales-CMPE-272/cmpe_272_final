@@ -6,6 +6,10 @@ pipeline {
         sdkman_curl_max_time = '300'        // Increase from 10s to 300s (5 minutes)
     }
 
+    tools {
+        grade 9.0
+    }
+
     stages {
         stage('Install JDK 21 via SDKMAN') {
             steps {
@@ -21,15 +25,7 @@ pipeline {
 
                     # Verify installation
                     java -version
-                '''
-            }
-        }
 
-        stage('Install Gradle via SDKMAN') {
-            steps {
-                sh '''
-                    source "$HOME/.sdkman/bin/sdkman-init.sh"
-                    sdk install gradle  # Adjust version as needed
                     gradle --version
                 '''
             }
