@@ -27,6 +27,8 @@ pipeline {
                     java -version
 
                     gradle --version
+
+                    ./gradlew --version
                 '''
             }
         }
