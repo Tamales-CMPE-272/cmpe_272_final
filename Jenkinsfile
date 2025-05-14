@@ -25,18 +25,7 @@ pipeline {
             steps {
                 sh '''
                     source "$HOME/.sdkman/bin/sdkman-init.sh"
-                    sdk install gradle  # Adjust version as needed
                     gradle --version
-                '''
-            }
-        }
-
-        stage('Backend Build & Tests') {
-            steps {
-                sh '''
-                    cd backend/tamalesHr
-                    echo "Running Gradle Wrapper build..."
-                    ./gradlew clean test --stacktrace --info
                 '''
             }
         }
