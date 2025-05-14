@@ -14,8 +14,7 @@ pipeline {
                     curl -s "https://get.sdkman.io" | bash
                     source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-                    # Install JDK 21 if not already installed
-                    sdk install java 21.0.2-tem || true
+                    sdk list java
 
                     # Use JDK 21
                     sdk use java 21.0.2-tem
