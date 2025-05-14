@@ -21,6 +21,16 @@ pipeline {
             }
         }
 
+        stage('Install Gradle via SDKMAN') {
+            steps {
+                sh '''
+                    source "$HOME/.sdkman/bin/sdkman-init.sh"
+                    sdk install gradle  # Adjust version as needed
+                    gradle --version
+                '''
+            }
+        }
+
         stage('Backend Build & Tests') {
             steps {
                 sh '''
