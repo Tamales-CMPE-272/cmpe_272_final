@@ -30,7 +30,7 @@ pipeline {
 
                     cd backend/tamalesHr
                     echo "Running Gradle Tests..."
-                    gradle clean test --stacktrace --info
+                    gradle test --stacktrace --info
                 '''
             }
         }
