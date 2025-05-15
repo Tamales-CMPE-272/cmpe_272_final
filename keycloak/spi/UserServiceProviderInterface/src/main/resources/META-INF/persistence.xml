@@ -4,7 +4,7 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
     <persistence-unit name="user-store" transaction-type="JTA">
-        <class>cmpe272.tamalesHr.model.EmployeePasswordModel</class>
+        <class>cmpe272.tamalesHr.EmployeePasswordModel</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://host.docker.internal:3306/employees"/>

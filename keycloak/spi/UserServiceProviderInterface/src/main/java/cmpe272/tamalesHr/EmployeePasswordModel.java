@@ -1,10 +1,6 @@
-package cmpe272.tamalesHr.model;
+package cmpe272.tamalesHr;
 
-import cmpe272.tamalesHr.MySQLUserStorageProvider;
 import jakarta.ws.rs.core.MultivaluedHashMap;
-import org.keycloak.component.ComponentModel;
-import org.keycloak.credential.CredentialInput;
-import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.*;
 import org.keycloak.storage.StorageId;
 import org.keycloak.credential.UserCredentialManager;
@@ -28,15 +24,15 @@ public class EmployeePasswordModel extends AbstractUserAdapter {
     private Role role;
 
     public EmployeePasswordModel(
-            KeycloakSession session,
+            TamalesKeycloakSession session,
             RealmModel realm,
-            ComponentModel storageProviderModel,
+            TamalesComponentModel storageProviderModel,
             String emp_no,
             String lastName,
             String firstName,
             Role role
     ) {
-        super(session, realm, storageProviderModel);
+        super(session.keycloakSession(), realm, storageProviderModel.componentModel());
         this.emp_no = emp_no;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -73,6 +69,11 @@ public class EmployeePasswordModel extends AbstractUserAdapter {
     public String getFirstAttribute(String name) {
         List<String> list = getAttributes().getOrDefault(name, List.of());
         return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public String toString() {
+        return this.firstName + " " + this.lastName + " (" + this.emp_no + ")";
     }
 
     @Override

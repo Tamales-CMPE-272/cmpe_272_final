@@ -1,8 +1,5 @@
 package cmpe272.tamalesHr;
 
-import com.mysql.cj.jdbc.MysqlXADataSource;
-import jakarta.enterprise.inject.spi.CDI;
-import org.jboss.jandex.DotName;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -10,15 +7,17 @@ import org.keycloak.storage.UserStorageProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
-
 public class MySQLUserStorageProviderFactory implements UserStorageProviderFactory<MySQLUserStorageProvider> {
 
     public static final String PROVIDER_ID = "mysql-user_store";
     private static final Logger log = LoggerFactory.getLogger(MySQLUserStorageProviderFactory.class);
     @Override
     public MySQLUserStorageProvider create(KeycloakSession session, ComponentModel model) {
-        return new MySQLUserStorageProvider(session, model);
+        TamalesKeycloakSession tamalesKeycloakSession = new TamalesKeycloakSessionImpl();
+        tamalesKeycloakSession.create(session);
+        TamalesComponentModel tamalesComponentModel = new TamalesComponentModelImpl();
+        tamalesComponentModel.create(model);
+        return new MySQLUserStorageProvider(tamalesKeycloakSession, tamalesComponentModel);
     }
 
     @Override
