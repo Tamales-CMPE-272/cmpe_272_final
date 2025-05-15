@@ -1,11 +1,8 @@
 package cmpe272.tamalesHr;
 
-import cmpe272.tamalesHr.model.EmployeePasswordModel;
-import cmpe272.tamalesHr.model.Role;
-import cmpe272.tamalesHr.model.UUIDValidator;
+
 import jakarta.persistence.*;
-import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.keycloak.component.ComponentModel;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputUpdater;
 import org.keycloak.credential.CredentialInputValidator;
@@ -13,10 +10,8 @@ import org.keycloak.models.*;
 import org.keycloak.models.credential.PasswordCredentialModel;
 
 import org.keycloak.models.credential.PasswordUserCredentialModel;
-import org.keycloak.storage.StorageId;
 import org.keycloak.storage.UserStorageProvider;
 
-import org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage;
 import org.keycloak.storage.user.UserLookupProvider;
 import org.keycloak.storage.user.UserQueryProvider;
 import org.keycloak.storage.user.UserRegistrationProvider;
@@ -24,15 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.stream.Stream;
-
-import jakarta.persistence.EntityManager;
-
-import static cmpe272.tamalesHr.model.UUIDValidator.extractEmpNo;
 
 public class MySQLUserStorageProvider implements UserStorageProvider,
         UserLookupProvider,
@@ -41,38 +31,23 @@ public class MySQLUserStorageProvider implements UserStorageProvider,
         CredentialInputValidator,
         UserRegistrationProvider {
 
-    private final KeycloakSession session;
-    private final ComponentModel model;
+    private final TamalesKeycloakSession session;
+    private final TamalesComponentModel model;
     static final String KEY_USERNAME = "username";
 
-    EntityManager entityManager;
+    TamalesEntityManager entityManager;
+
+    @VisibleForTesting
+    public void setEntityManager(TamalesEntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     private static final Logger log = LoggerFactory.getLogger(MySQLUserStorageProvider.class);
 
-    public MySQLUserStorageProvider(KeycloakSession session, ComponentModel model) {
+    public MySQLUserStorageProvider(TamalesKeycloakSession session, TamalesComponentModel model) {
         this.session = session;
         this.model = model;
-        try{
-            log.info("⚠️  Trying to create entity manager");
-            Properties props = new Properties();
-            props.put("jakarta.persistence.jdbc.url", "jdbc:mysql://host.docker.internal:3306/employees");
-            props.put("jakarta.persistence.jdbc.user", "root");
-            props.put("jakarta.persistence.jdbc.password", "");
-            props.put("jakarta.persistence.jdbc.driver", "com.mysql.cj.jdbc.Driver");
-            props.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-            EntityManagerFactory emf = new HibernatePersistenceProvider()
-                    .createEntityManagerFactory("user-store", props);
-            if(emf == null){
-                log.error("❌ EntityManagerFactory was not initialized");
-            }
-            entityManager = emf.createEntityManager();
-            if(entityManager == null){
-                log.error("❌ EntityManager  was not initialized");
-            }
-            log.info("✅ EntityManager was initialized{} database:{}", entityManager.getProperties(), entityManager.getMetamodel());
-        }catch(Exception e){
-            log.error("❌Entity Manager was not created --> ", e);
-        }
+        this.entityManager = new TamalesEntityManagerImpl().create();
     }
 
     @Override
@@ -298,7 +273,11 @@ public class MySQLUserStorageProvider implements UserStorageProvider,
 
     @Override
     public boolean removeUser(RealmModel realm, UserModel user) {
-        log.info("🗑️ removeUser: realm={}, user={}", realm.getName(), user.getUsername());
+        String name = "";
+        if(realm != null){
+            name = realm.getName();
+        }
+        log.info("🗑️ removeUser: realm={}, user={}",name, user.getUsername());
         try {
             String empNo = UUIDValidator.extractEmpNo(user.getId());
 
@@ -354,7 +333,11 @@ public class MySQLUserStorageProvider implements UserStorageProvider,
 
     @Override
     public UserModel addUser(RealmModel realm, String username) {
-        log.info("🔍addUser: realm={}, username={}", realm.getName(), username);
+        String name = "";
+        if(realm != null){
+            name = realm.getName();
+        }
+        log.info("🔍addUser: realm={}, username={}",name, username);
         try {
             long empNo = Long.parseLong(username);
 
@@ -435,6 +418,7 @@ public class MySQLUserStorageProvider implements UserStorageProvider,
             String lastName,
             Role role
     ) {
+        log.info("User creation: {} : {}: {}: {}: {}", realm, empNo, firstName, lastName, role);
         return new EmployeePasswordModel(session, realm, model, empNo, firstName, lastName, role);
     }
 }

@@ -1,4 +1,4 @@
-package cmpe272.tamalesHr.model;
+package cmpe272.tamalesHr;
 
 public enum Role {
     MANAGER("Manager"),
