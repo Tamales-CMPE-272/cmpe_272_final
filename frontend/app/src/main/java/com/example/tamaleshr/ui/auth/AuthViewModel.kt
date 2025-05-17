@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.tamaleshr.di.DispatcherProvider
+import com.example.tamaleshr.di.DispatcherProviderImpl
 import com.example.tamaleshr.di.koin
 import com.example.tamaleshr.service.auth.AuthRepository
 import com.example.tamaleshr.service.auth.AuthResponse
@@ -33,7 +34,8 @@ class AuthViewModel(
         val password: String = ""
     )
 
-    private val dispatchers: DispatcherProvider = koin.get()
+    private val dispatchers: DispatcherProvider
+        get() = koin.get()
 
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
