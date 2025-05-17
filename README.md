@@ -1,7 +1,5 @@
 # Tamales HR - Enterprise Human Resources Management App
 
-## Abstract
-
 Our client is facing significant challenges in managing Human Resources (HR) operations. Although they maintain a well-structured MySQL enterprise database containing employee information, this setup lacks the necessary tools for secure and efficient data management. Currently, there's no role-based authentication in place, leaving sensitive data vulnerable to unauthorized access. Additionally, manually retrieving and updating records directly from the database is both time-consuming and error-prone.
 
 To address these issues, our team—**The Tamales**—has developed **Tamales HR**, an enterprise mobile application designed to streamline HR management processes. The application empowers employees to securely access their personal information and payment history. Simultaneously, department managers gain robust tools to manage their teams, such as:
@@ -15,39 +13,6 @@ To ensure data security and proper access control, we've integrated **Keycloak**
 
 Furthermore, we adopted industry best practices for development and collaboration, using **GitHub** for version control and **Jenkins** for continuous integration, ensuring smooth deployment and efficient team coordination.
 
-## Features
-
-### ✅ Secure User Authentication
-- **Role-based access control** implemented via **Keycloak**.
-- Differentiates between **Employees** and **Managers**, granting access to features based on their roles.
-- Protects sensitive data from unauthorized access.
-
-### 📱 Mobile HR Portal (Android Application)
-- Employees can:
-  - View personal information (name, birth date, hire date, etc.).
-  - Review salary history and payment records.
-- Managers can:
-  - View all employees in their department.
-  - Add employees to their department.
-  - Remove employees from their department.
-  - Search for specific employees.
-
-### 🗄️ Enterprise-Grade Backend Integration
-- Seamless integration with the existing **MySQL employee database**.
-- Real-time data synchronization ensures that updates made via the app reflect instantly in the company’s database.
-
-### 🧩 Custom Keycloak User Storage Provider
-- Custom-built **Keycloak SPI (Service Provider Interface)** to federate users directly from the existing employee database.
-- Maps employees to Keycloak users dynamically without duplicating data.
-- Supports user authentication based on employee credentials stored in the database.
-
-### 🔄 Continuous Integration & Version Control
-- **GitHub** for collaborative development and source code management.
-- **Jenkins CI/CD pipeline** automates builds, testing, and deployment, ensuring high-quality and up-to-date application versions.
-
-### 📊 Scalable and Modular Architecture
-- Follows a clean separation of concerns between **frontend**, **backend services**, and **authentication provider**.
-- Designed for scalability, making it easy to extend functionalities (e.g., leave requests, benefits management) in future versions.
 
 ## Getting Started
 
@@ -66,14 +31,13 @@ Make sure you have the following installed:
 - **Jenkins (optional for CI)**
 
 ### Project Structure
+```
 tamales-hr/
 ├── backend/ # Spring Boot backend service
-├── keycloak-provider/ # Custom Keycloak SPI for MySQL user federation
-├── mobile-app/ # Android mobile application (Kotlin)
-├── database/ # SQL scripts and sample data
-├── jenkins/ # Jenkins pipeline configurations
+├── keycloak/ # Custom Keycloak SPI for MySQL user federation
+├── frontend/ # Android mobile application (Kotlin)
 ├── README.md # This file
-└── build.gradle / build.gradle.kts
+```
 
 ### Setup Instructions
 
@@ -105,7 +69,7 @@ docker build -f keycloak-debug.Dockerfile -t keycloak-debug .
 docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin keycloak-debug
 ```
 
-### 4. Run Spring Boot Server API
+#### 4. Run Spring Boot Server API
 Go to the path where backend server is
 ```bash
 cd {{YOUR_PATH}}/backend/tamalesHr 
@@ -115,4 +79,75 @@ Run Spring Server
 ./gradlew bootRun
 ```
 
-### 5. Open Android Studio and run the app
+#### 5. Open Android Studio and run the app
+
+https://github.com/user-attachments/assets/1fc9bf7c-3d66-4eea-9d23-c7f6dd282a7f
+
+## Features
+
+### ✅ Secure User Authentication
+- **Role-based access control** implemented via **Keycloak**.
+- Differentiates between **Employees** and **Managers**, granting access to features based on their roles.
+- Protects sensitive data from unauthorized access.
+
+#### Manager Authentication Demo
+https://github.com/user-attachments/assets/18c9ec33-e705-4316-b6fc-8d0761b6c818
+
+<img src="https://github.com/user-attachments/assets/773eea42-66b5-4f74-bd70-47fc3f6d750b" width=500 />
+
+#### Employee Authentication Demo
+https://github.com/user-attachments/assets/6923c5e3-cb89-442c-9895-ae79fa1b16a7
+
+<img src="https://github.com/user-attachments/assets/c96b9355-4363-4c08-aeca-b286bf80d613" width=500 />
+
+### 📱 Mob
+
+ile HR Portal (Android Application)
+- Employees can:
+  - View personal information (name, birth date, hire date, etc.).
+  - Review salary history and payment records.
+    
+https://github.com/user-attachments/assets/b7111442-3969-4113-bf1e-c9f0329d4bef
+
+- Managers can:
+  - View all employees in their department.
+  - Add employees to their department.
+  - Remove employees from their department.
+  - Search for specific employees.
+ 
+https://github.com/user-attachments/assets/5a2a73ea-992d-4b63-8737-bb59b24e3957
+
+### 🧩 Custom Keycloak User Storage Provider
+- Custom-built **Keycloak SPI (Service Provider Interface)** to federate users directly from the existing employee database.
+- Maps employees to Keycloak users dynamically without duplicating data.
+- Supports user authentication based on employee credentials stored in the database.
+
+https://github.com/user-attachments/assets/b2d65ab4-f350-41ab-ac6b-b2f933b2cc21
+
+### 🔄 Continuous Integration & Version Control
+- **GitHub** for collaborative development and source code management.
+- **Jenkins CI/CD pipeline** automates builds, testing, and deployment, ensuring high-quality and up-to-date application versions.
+
+### 📊 Scalable and Modular Architecture
+
+#### Project Architecture Diagram:
+<img width="500" alt="Screenshot 2025-05-12 at 6 19 01 PM" src="https://github.com/user-attachments/assets/27174b5e-f95b-4543-a100-aa93bc3b06b2" />
+
+#### Android App Class Diagram:
+<img width="500" alt="Screenshot 2025-05-12 at 6 20 08 PM" src="https://github.com/user-attachments/assets/8448e85c-ad4f-4b11-8559-34edf992c152" />
+
+#### Main Controller Class Structure:
+<img width="500" alt="Screenshot 2025-05-12 at 6 20 34 PM" src="https://github.com/user-attachments/assets/0e168b5a-9da6-4cca-9b14-da7689d056b8" />
+
+#### Employees DB Diagram:
+<img width="500" alt="Screenshot 2025-05-12 at 6 21 00 PM" src="https://github.com/user-attachments/assets/e4a25b7a-9f66-4443-8c0d-e43867ec8ae5" />
+
+#### Keycloak User Provider Class Diagram:
+<img width="500" alt="Screenshot 2025-05-12 at 6 21 37 PM" src="https://github.com/user-attachments/assets/6b6c6288-3e85-4be3-8c9d-8afb1453ce14" />
+
+
+
+
+
+
+
