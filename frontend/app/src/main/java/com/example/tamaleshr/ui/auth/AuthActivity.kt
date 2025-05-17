@@ -20,13 +20,15 @@ import com.example.tamaleshr.util.AuthTokenManager
 
 class AuthActivity : AppCompatActivity() {
     private val viewModel by viewModels<AuthViewModel> { AuthViewModel.Factory }
-    private lateinit var binding: ActivityAuthBinding
+    private lateinit var _binding: ActivityAuthBinding
+    val binding: ActivityAuthBinding
+        get() = _binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityAuthBinding.inflate(layoutInflater)
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
+        _binding = ActivityAuthBinding.inflate(layoutInflater)
+        _binding.etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
             override fun onTextChanged(username: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 viewModel.updatePassword(username.toString())
@@ -34,7 +36,7 @@ class AuthActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) = Unit
         })
-        binding.etUsername.addTextChangedListener(object : TextWatcher {
+        _binding.etUsername.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
             override fun onTextChanged(password: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 viewModel.updateUsername(password.toString())
@@ -42,7 +44,7 @@ class AuthActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) = Unit
         })
-        binding.btnLogin.setOnClickListener {
+        _binding.btnLogin.setOnClickListener {
             viewModel.authenticate { result ->
                 when (result) {
                     is UseCaseResult.Failure<AuthResponse, DefaultError> -> {
@@ -57,7 +59,7 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
         }
-        setContentView(binding.root)
+        setContentView(_binding.root)
     }
 
     override fun onStart() {
@@ -67,11 +69,11 @@ class AuthActivity : AppCompatActivity() {
             return
         }
         viewModel.credentialsState.observe(this) { state ->
-            binding.btnLogin.isEnabled = state.username.isNotBlank() && state.password.isNotBlank()
+            _binding.btnLogin.isEnabled = state.username.isNotBlank() && state.password.isNotBlank()
         }
         viewModel.isLoading.observe(this) { isLoading ->
-            binding.btnLogin.isVisible = !isLoading
-            binding.pbLoading.isVisible = isLoading
+            _binding.btnLogin.isVisible = !isLoading
+            _binding.pbLoading.isVisible = isLoading
         }
     }
 

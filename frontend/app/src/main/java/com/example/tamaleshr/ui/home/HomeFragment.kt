@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.annotation.VisibleForTesting
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,7 +32,8 @@ class HomeFragment : Fragment() {
     private val navController: NavController
         get() = requireView().findNavController()
 
-    private var _binding: FragmentHomeBinding? = null
+    @VisibleForTesting
+    internal var _binding: FragmentHomeBinding? = null
 
     private val authTokenManager: AuthTokenManager
         get() = koin.get<AuthTokenManager>()
@@ -40,7 +42,7 @@ class HomeFragment : Fragment() {
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
