@@ -19,25 +19,21 @@ fun appModule(context: Context) = module {
     includes(EmployeeRepository.koinModule())
     includes(ProfileRepository.koinModule())
     includes(DepartmentRepository.koinModule())
-    single {
-        dispatchers()
-    }
+    includes(dispatchers())
 }
 
 fun dispatchers() = module {
     single {
-        object : DispatcherProvider {
-            override val io: CoroutineDispatcher
-                get() = Dispatchers.IO
-            override val main: CoroutineDispatcher
-                get() = Dispatchers.Main
-            override val default: CoroutineDispatcher
-                get() = Dispatchers.Default
-            override val unconfined: CoroutineDispatcher
-                get() = Dispatchers.Unconfined
-        }
+        DispatcherProviderImpl() as DispatcherProvider
     }
 }
+
+class DispatcherProviderImpl(
+    override val io: CoroutineDispatcher = Dispatchers.IO,
+    override val main: CoroutineDispatcher = Dispatchers.Main,
+    override val default: CoroutineDispatcher = Dispatchers.Default,
+    override val unconfined: CoroutineDispatcher = Dispatchers.Unconfined
+) : DispatcherProvider
 
 val koin: Koin
     get() = GlobalContext.get()
