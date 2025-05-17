@@ -124,10 +124,6 @@ https://github.com/user-attachments/assets/5a2a73ea-992d-4b63-8737-bb59b24e3957
 
 https://github.com/user-attachments/assets/b2d65ab4-f350-41ab-ac6b-b2f933b2cc21
 
-### 🔄 Continuous Integration & Version Control
-- **GitHub** for collaborative development and source code management.
-- **Jenkins CI/CD pipeline** automates builds, testing, and deployment, ensuring high-quality and up-to-date application versions.
-
 ### 📊 Scalable and Modular Architecture
 
 #### Project Architecture Diagram:
@@ -145,6 +141,26 @@ https://github.com/user-attachments/assets/b2d65ab4-f350-41ab-ac6b-b2f933b2cc21
 #### Keycloak User Provider Class Diagram:
 <img width="500" alt="Screenshot 2025-05-12 at 6 21 37 PM" src="https://github.com/user-attachments/assets/6b6c6288-3e85-4be3-8c9d-8afb1453ce14" />
 
+### 🧪 Testing
+To ensure the reliability and robustness of Tamales HR, we implemented tests checking the functionality at all layers.
+
+###### Backend: Tested individual service and repository layers using JUnit5 and Mockito.
+<img width="400" alt="Screenshot 2025-05-17 at 12 09 22 AM" src="https://github.com/user-attachments/assets/045315b1-ef95-4433-9019-16e497f3d8bf" />
+
+
+###### Keycloak: Validate user credentials, user creation , and removal.
+
+<img width="400" alt="Screenshot 2025-05-17 at 12 08 40 AM" src="https://github.com/user-attachments/assets/c0a3e3f6-7cfa-43bf-b25e-2418a3abc8d0" />
+
+
+###### Frontend (Android): ViewModels and business logic tested with JUnit , MockK, and Espresso usinf Robolectric to ensure correctness.
+
+<img width="400" alt="Screenshot 2025-05-17 at 12 07 50 AM" src="https://github.com/user-attachments/assets/e2124b8a-b8be-415e-ba20-90a5502054a3" />
+
+
+### 🔄 Continuous Integration & Version Control
+- **GitHub** for collaborative development and source code management.
+- **Jenkins CI/CD pipeline** automates builds, testing, and deployment, ensuring high-quality and up-to-date application versions.
 
 
 
