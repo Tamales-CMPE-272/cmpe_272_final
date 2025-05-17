@@ -1,6 +1,7 @@
 package com.example.tamaleshr.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -14,7 +15,16 @@ import org.joda.time.DateTime
 import org.joda.time.Duration
 import java.util.Date
 
-class AuthTokenManager(context: Context) {
+open class AuthTokenManager(
+    context: Context,
+    val sharedPreferences: SharedPreferences = EncryptedSharedPreferences.create(
+        KEY_AUTH_PREFS,
+        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+        context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
+) {
 
     companion object {
         val KEY_AUTH_PREFS = "auth_prefs"
@@ -26,15 +36,7 @@ class AuthTokenManager(context: Context) {
         val KEY_DEPT_ID = "KEY_DEPT_ID"
     }
 
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        KEY_AUTH_PREFS,
-        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-        context,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
-
-    fun saveTokens(auth: AuthResponse) {
+    open fun saveTokens(auth: AuthResponse) {
         sharedPreferences.edit {
             putString(KEY_ACCESS_TOKEN, auth.access_token)
                 .putString(KEY_REFRESH_TOKEN, auth.refresh_token)
@@ -43,40 +45,40 @@ class AuthTokenManager(context: Context) {
         }
     }
 
-    fun saveDeptId(data: EmployeeManagementData?){
-        if(data != null){
+    open fun saveDeptId(data: EmployeeManagementData?) {
+        if (data != null) {
             sharedPreferences.edit {
                 putString(KEY_DEPT_ID, data.deptNo)
             }
         }
     }
 
-    fun isTokenValid(): Boolean{
+    open fun isTokenValid(): Boolean {
         val timestamp = sharedPreferences.getString(KEY_LAST_TOKEN, null) ?: return true
         val expiresIn = sharedPreferences.getInt(KEY_EXPIRES_IN, 0)
 
-       val timeLastSaved = DateTime.parse(timestamp)
+        val timeLastSaved = DateTime.parse(timestamp)
         val now = DateTime.now()
 
         val duration = Duration(timeLastSaved, now)
         return duration.standardSeconds < expiresIn
     }
 
-    fun saveUsername(username: String){
+    open fun saveUsername(username: String) {
         sharedPreferences.edit {
             putString(KEY_EMP_NO, username)
         }
     }
 
-    fun deptId(): String? = sharedPreferences.getString(KEY_DEPT_ID, null)
+    open fun deptId(): String? = sharedPreferences.getString(KEY_DEPT_ID, null)
 
-    fun getAccessToken(): String? = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
+    open fun getAccessToken(): String? = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
 
-    fun getRefreshToken(): String? = sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
+    open fun getRefreshToken(): String? = sharedPreferences.getString(KEY_REFRESH_TOKEN, null)
 
-    fun getUsername(): String = sharedPreferences.getString(KEY_EMP_NO, null).orEmpty()
+    open fun getUsername(): String = sharedPreferences.getString(KEY_EMP_NO, null).orEmpty()
 
-    fun clear() = sharedPreferences.edit { clear() }
+    open fun clear() = sharedPreferences.edit { clear() }
 
     fun decodeJwtPayloadToModel(): JwtTokenPayload? {
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build() ?: return null
@@ -85,7 +87,8 @@ class AuthTokenManager(context: Context) {
         if (parts.size != 3) return null
 
         val payload = parts[1]
-        val decodedBytes = Base64.decode(payload, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
+        val decodedBytes =
+            Base64.decode(payload, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
         val json = String(decodedBytes, Charsets.UTF_8)
 
         val adapter = moshi.adapter(JwtTokenPayload::class.java)

@@ -1,27 +1,118 @@
-## Abstract:
+# Tamales HR - Enterprise Human Resources Management App
 
-A company that our team is working for is struggling with managing Human Resources-related functions. The company could benefit from having an application that would allow the various department managers and employees to manage and access and update their records. For example, a mobile app that allows an employee to review their own personal information and payment history, as well as allows a manager of that company to add or remove employees to or from their departments while updating the company's database would be ideal. Currently, the only thing that our company has that is close to this is a MySQL enterprise database. This database currently contains employee information, which ensures that the information is organized.
+## Abstract
 
-Unfortunately, a database is not enough, as it does not offer protection or efficiency. There is currently no user role based authentication needed when viewing the database tables, which exposes the company to data breaches and unauthorized access. Manually retrieving and updating information straight from the database is also an inefficient way to view and manage the data.
+Our client is facing significant challenges in managing Human Resources (HR) operations. Although they maintain a well-structured MySQL enterprise database containing employee information, this setup lacks the necessary tools for secure and efficient data management. Currently, there's no role-based authentication in place, leaving sensitive data vulnerable to unauthorized access. Additionally, manually retrieving and updating records directly from the database is both time-consuming and error-prone.
 
-Our application, Tamales HR, will solve the problems that come with just having a database. Our team, The Tamales, will create an enterprise HR mobile application that can be used to allow employees to see and interact with the database data. We will implement user role based authentication for the application to ensure protection using Keycloak. The application will also give the company a streamlined way to read information about employees. This means keeping track of their general information such as their employee numbers, names, birth dates, hire dates, titles, departments, as well as their salaries. Moreover, it should allow managers to manage their employees by allowing them to view all the employees that work in the manager’s department, search for employees, add employees to their department, and remove employees from their department. We will also use GitHub and Jenkins to integrate and track software updates made by the team.
+To address these issues, our team—**The Tamales**—has developed **Tamales HR**, an enterprise mobile application designed to streamline HR management processes. The application empowers employees to securely access their personal information and payment history. Simultaneously, department managers gain robust tools to manage their teams, such as:
 
-## Project Architecture Diagram:
+- Viewing employees within their department
+- Adding or removing employees from their department
+- Searching for employee records
+- Updating company database records seamlessly
 
-<img width="637" alt="Screenshot 2025-05-12 at 6 19 01 PM" src="https://github.com/user-attachments/assets/27174b5e-f95b-4543-a100-aa93bc3b06b2" />
+To ensure data security and proper access control, we've integrated **Keycloak** for user role-based authentication. This guarantees that only authorized personnel can perform specific actions based on their role.
 
-## Android App Class Diagram:
+Furthermore, we adopted industry best practices for development and collaboration, using **GitHub** for version control and **Jenkins** for continuous integration, ensuring smooth deployment and efficient team coordination.
 
-<img width="252" alt="Screenshot 2025-05-12 at 6 20 08 PM" src="https://github.com/user-attachments/assets/8448e85c-ad4f-4b11-8559-34edf992c152" />
+## Features
 
-## Main Controller Class Structure:
+### ✅ Secure User Authentication
+- **Role-based access control** implemented via **Keycloak**.
+- Differentiates between **Employees** and **Managers**, granting access to features based on their roles.
+- Protects sensitive data from unauthorized access.
 
-<img width="663" alt="Screenshot 2025-05-12 at 6 20 34 PM" src="https://github.com/user-attachments/assets/0e168b5a-9da6-4cca-9b14-da7689d056b8" />
+### 📱 Mobile HR Portal (Android Application)
+- Employees can:
+  - View personal information (name, birth date, hire date, etc.).
+  - Review salary history and payment records.
+- Managers can:
+  - View all employees in their department.
+  - Add employees to their department.
+  - Remove employees from their department.
+  - Search for specific employees.
 
-## Employees DB Diagram:
+### 🗄️ Enterprise-Grade Backend Integration
+- Seamless integration with the existing **MySQL employee database**.
+- Real-time data synchronization ensures that updates made via the app reflect instantly in the company’s database.
 
-<img width="743" alt="Screenshot 2025-05-12 at 6 21 00 PM" src="https://github.com/user-attachments/assets/e4a25b7a-9f66-4443-8c0d-e43867ec8ae5" />
+### 🧩 Custom Keycloak User Storage Provider
+- Custom-built **Keycloak SPI (Service Provider Interface)** to federate users directly from the existing employee database.
+- Maps employees to Keycloak users dynamically without duplicating data.
+- Supports user authentication based on employee credentials stored in the database.
 
-## Keycloak User Provider Class Diagram:
+### 🔄 Continuous Integration & Version Control
+- **GitHub** for collaborative development and source code management.
+- **Jenkins CI/CD pipeline** automates builds, testing, and deployment, ensuring high-quality and up-to-date application versions.
 
-<img width="339" alt="Screenshot 2025-05-12 at 6 21 37 PM" src="https://github.com/user-attachments/assets/6b6c6288-3e85-4be3-8c9d-8afb1453ce14" />
+### 📊 Scalable and Modular Architecture
+- Follows a clean separation of concerns between **frontend**, **backend services**, and **authentication provider**.
+- Designed for scalability, making it easy to extend functionalities (e.g., leave requests, benefits management) in future versions.
+
+## Getting Started
+
+This section will guide you through setting up **Tamales HR** on your local machine for development and testing purposes. Follow the steps below to get the backend services, Keycloak authentication, and Android application up and running.
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- **Java 21** 
+- **MySQL 8.x**
+- **Docker & Docker Compose**
+- **Android Studio (Giraffe or newer)**
+- **Gradle 8.x (or use Gradle Wrapper)**
+- **Git**
+- **Jenkins (optional for CI)**
+
+### Project Structure
+tamales-hr/
+├── backend/ # Spring Boot backend service
+├── keycloak-provider/ # Custom Keycloak SPI for MySQL user federation
+├── mobile-app/ # Android mobile application (Kotlin)
+├── database/ # SQL scripts and sample data
+├── jenkins/ # Jenkins pipeline configurations
+├── README.md # This file
+└── build.gradle / build.gradle.kts
+
+### Setup Instructions
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-org/tamales-hr.git
+cd tamales-hr
+```
+
+#### 2. Setup MySQL Database
+Import the provided schema and sample data
+```bash
+mysql -u root -p < {{YOUR_PATH}}/employees.sql
+```
+
+#### 3. Run Keycloak Server with MySQL Integration
+Go to the path where keycloak server is
+```bash
+cd {{YOUR_PATH}}/keycloak/spi/UserServiceProviderInterface
+```
+Build all the gradle dependencies
+```bash
+./gradlew clean quarkusBuild --refresh-dependencies
+```
+Start the server with docker
+```bash
+docker build -f keycloak-debug.Dockerfile -t keycloak-debug .
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin keycloak-debug
+```
+
+### 4. Run Spring Boot Server API
+Go to the path where backend server is
+```bash
+cd {{YOUR_PATH}}/backend/tamalesHr 
+```
+Run Spring Server
+```bash
+./gradlew bootRun
+```
+
+### 5. Open Android Studio and run the app

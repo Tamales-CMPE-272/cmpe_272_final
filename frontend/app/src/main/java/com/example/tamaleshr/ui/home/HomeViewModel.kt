@@ -7,44 +7,44 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.tamaleshr.di.DispatcherProvider
 import com.example.tamaleshr.di.koin
 import com.example.tamaleshr.service.employee.Employee
 import com.example.tamaleshr.ui.BaseUiState
-import com.example.tamaleshr.ui.MainViewModel
 import com.example.tamaleshr.usecase.DefaultError
 import com.example.tamaleshr.usecase.UseCaseResult
 import com.example.tamaleshr.usecase.employee.EmployeeUseCase
 import com.example.tamaleshr.usecase.failure
 import com.example.tamaleshr.usecase.success
 import com.example.tamaleshr.util.AuthTokenManager
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiResultLiveData = MutableLiveData<BaseUiState<Employee, DefaultError>>()
     val uiResultLiveData: LiveData<BaseUiState<Employee, DefaultError>>
         get() = _uiResultLiveData
 
+    private val dispatchers: DispatcherProvider = koin.get()
+
     fun fetchEmployee(employeeId: String =koin.get<AuthTokenManager>().getUsername()){
         _uiResultLiveData.value = BaseUiState.Loading()
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatchers.io) {
             EmployeeUseCase(
                 employeeId = employeeId,
                 repository = koin.get()
             ).launch().collectLatest { result ->
                 when (result) {
                     is UseCaseResult.Failure<Employee, DefaultError> -> {
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             _uiResultLiveData.postValue(result.failure())
                         }
                     }
                     is UseCaseResult.Success<Employee, DefaultError> -> {
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             _uiResultLiveData.postValue(result.success())
                         }
                     }
@@ -56,7 +56,7 @@ class HomeViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                HomeViewModel(Dispatchers.IO)
+                HomeViewModel()
             }
         }
     }

@@ -14,7 +14,10 @@ class DepartmentEmployeeAdapter(
     private val onRemoveClicked: (DepartmentEmployee) -> Unit
 ) : ListAdapter<DepartmentEmployee, DepartmentEmployeeAdapter.EmployeeViewHolder>(DiffCallback) {
 
-    inner class EmployeeViewHolder(private val binding: ItemDepartmentEmployeeBinding) :
+    class EmployeeViewHolder(
+        val binding: ItemDepartmentEmployeeBinding,
+        private val onRemoveClicked: (DepartmentEmployee) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(employee: DepartmentEmployee) {
@@ -44,7 +47,7 @@ class DepartmentEmployeeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeViewHolder {
         val binding = ItemDepartmentEmployeeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EmployeeViewHolder(binding)
+        return EmployeeViewHolder(binding, onRemoveClicked)
     }
 
     override fun onBindViewHolder(holder: EmployeeViewHolder, position: Int) {

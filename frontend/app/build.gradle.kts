@@ -4,6 +4,9 @@ plugins {
 }
 
 android {
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
     namespace = "com.example.tamaleshr"
     compileSdk = 35
 
@@ -70,4 +73,23 @@ dependencies {
 
     // encrypted shared preferences
     implementation(libs.androidx.security.crypto)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+
+    // Koin testing tools
+    testImplementation(libs.koin.test)
+    // Needed JUnit version
+    testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.truth)
+
+    testImplementation(libs.mockk)
+
+    // MockK for Android instrumentation tests (if needed)
+    androidTestImplementation(libs.mockk.android)
+
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.androidx.fragment.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.core.testing)
 }

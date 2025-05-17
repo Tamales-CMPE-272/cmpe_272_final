@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.tamaleshr.di.DispatcherProvider
 import com.example.tamaleshr.di.koin
 import com.example.tamaleshr.service.department.Department
 import com.example.tamaleshr.service.department.DepartmentEmployee
@@ -26,15 +27,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class DepartmentViewModel(
-    private val dispatcher: CoroutineDispatcher
-) : ViewModel() {
+class DepartmentViewModel() : ViewModel() {
 
     private val _uiResultLiveData = MutableLiveData<BaseUiState<DepartmentUiData, DefaultError>>()
     val uiResultLiveData: LiveData<BaseUiState<DepartmentUiData, DefaultError>>
         get() = _uiResultLiveData
     private val authTokenManager: AuthTokenManager
         get() = koin.get<AuthTokenManager>()
+
+    private val dispatchers: DispatcherProvider = koin.get()
 
     fun filterUsers(text: String) {
         val newEmp = _uiResultLiveData.value?.data?.data?.departmentEmployees.orEmpty().filter {
@@ -45,13 +46,15 @@ class DepartmentViewModel(
             filteredUsers = newEmp,
             data = data
         )
-        _uiResultLiveData.value = BaseUiState.Success(newData)
+        viewModelScope.launch(dispatchers.main){
+            _uiResultLiveData.value = BaseUiState.Success(newData)
+        }
     }
 
     fun removeUser(empNo: Int, callback: () -> Unit){
         val deptId = authTokenManager.deptId() ?: return
         _uiResultLiveData.postValue(BaseUiState.Loading())
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatchers.io) {
             RemoveUserUseCase(
                 departmentId = deptId,
                 empId = empNo,
@@ -60,14 +63,14 @@ class DepartmentViewModel(
                 when (result) {
                     is UseCaseResult.Failure<Department, DefaultError> -> {
                         val error = result.error ?: return@collectLatest
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             _uiResultLiveData.postValue(BaseUiState.Error(error))
                         }
                     }
 
                     is UseCaseResult.Success<Department, DefaultError> -> {
                         val data = result.data ?: return@collectLatest
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             callback.invoke()
                             _uiResultLiveData.postValue(
                                 BaseUiState.Success(
@@ -87,7 +90,7 @@ class DepartmentViewModel(
     fun addUser(empNo: Int, callback: () -> Unit){
         val deptId = authTokenManager.deptId() ?: return
         _uiResultLiveData.postValue(BaseUiState.Loading())
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatchers.io) {
             AddUserUseCase(
                 departmentId = deptId,
                 empId = empNo,
@@ -96,14 +99,14 @@ class DepartmentViewModel(
                 when (result) {
                     is UseCaseResult.Failure<Department, DefaultError> -> {
                         val error = result.error ?: return@collectLatest
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             _uiResultLiveData.postValue(BaseUiState.Error(error))
                         }
                     }
 
                     is UseCaseResult.Success<Department, DefaultError> -> {
                         val data = result.data ?: return@collectLatest
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             callback.invoke()
                             _uiResultLiveData.postValue(
                                 BaseUiState.Success(
@@ -123,7 +126,7 @@ class DepartmentViewModel(
     fun fetchDepartmentData() {
         val deptId = authTokenManager.deptId() ?: return
         _uiResultLiveData.postValue(BaseUiState.Loading())
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatchers.io) {
             DepartmentUseCase(
                 departmentId = deptId,
                 repository = koin.get()
@@ -131,14 +134,14 @@ class DepartmentViewModel(
                 when (result) {
                     is UseCaseResult.Failure<Department, DefaultError> -> {
                         val error = result.error ?: return@collectLatest
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             _uiResultLiveData.postValue(BaseUiState.Error(error))
                         }
                     }
 
                     is UseCaseResult.Success<Department, DefaultError> -> {
                         val data = result.data ?: return@collectLatest
-                        viewModelScope.launch {
+                        viewModelScope.launch(dispatchers.main) {
                             _uiResultLiveData.postValue(
                                 BaseUiState.Success(
                                     DepartmentUiData(
@@ -163,7 +166,7 @@ class DepartmentViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                DepartmentViewModel(Dispatchers.IO)
+                DepartmentViewModel()
             }
         }
     }

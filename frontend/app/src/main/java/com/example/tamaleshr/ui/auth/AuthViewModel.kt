@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.tamaleshr.di.DispatcherProvider
 import com.example.tamaleshr.di.koin
 import com.example.tamaleshr.service.auth.AuthRepository
 import com.example.tamaleshr.service.auth.AuthResponse
@@ -25,13 +26,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val dispatcher: CoroutineDispatcher
 ): ViewModel() {
 
     data class Credentials(
         val username: String = "",
         val password: String = ""
     )
+
+    private val dispatchers: DispatcherProvider = koin.get()
 
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
     val isLoading: LiveData<Boolean>
@@ -43,17 +45,21 @@ class AuthViewModel(
 
 
     fun updateUsername(username: String){
-        val state = _credentialsState.value ?: Credentials()
-        _credentialsState.postValue(
-            state.copy(username = username)
-        )
+        viewModelScope.launch(dispatchers.io) {
+            val state = _credentialsState.value ?: Credentials()
+            _credentialsState.postValue(
+                state.copy(username = username)
+            )
+        }
     }
 
     fun updatePassword(password: String){
-        val state = _credentialsState.value ?: Credentials()
-        _credentialsState.postValue(
-            state.copy(password = password)
-        )
+        viewModelScope.launch(dispatchers.io) {
+            val state = _credentialsState.value ?: Credentials()
+            _credentialsState.postValue(
+                state.copy(password = password)
+            )
+        }
     }
 
 
@@ -61,7 +67,7 @@ class AuthViewModel(
         callback: (result: UseCaseResult<AuthResponse, DefaultError>) -> Unit
     ) {
         _isLoading.postValue(true)
-        viewModelScope.launch(dispatcher) {
+        viewModelScope.launch(dispatchers.io) {
             AuthUseCase(
                 username = credentialsState.value?.username.orEmpty(),
                 password = credentialsState.value?.password.orEmpty(),
@@ -69,7 +75,7 @@ class AuthViewModel(
                 repository = koin.get()
             ).launch().collectLatest { result ->
                 _isLoading.postValue(false)
-                viewModelScope.launch {
+                viewModelScope.launch(dispatchers.main) {
                     callback.invoke(result)
                 }
             }
@@ -79,7 +85,7 @@ class AuthViewModel(
     companion object {
         val Factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                AuthViewModel(Dispatchers.IO)
+                AuthViewModel()
             }
         }
     }
