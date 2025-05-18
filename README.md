@@ -49,9 +49,28 @@ cd tamales-hr
 ```
 
 #### 2. Setup MySQL Database
-Import the provided schema and sample data
+Import the provided schema with sample data
 ```bash
 mysql -u root -p < {{YOUR_PATH}}/employees.sql
+```
+Add employee_password table and populated with default values
+```sql
+CREATE TABLE employee_passwords (
+    emp_no INT NOT NULL PRIMARY KEY,
+    password VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_employee_passwords_emp_no
+        FOREIGN KEY (emp_no)
+        REFERENCES employees(emp_no)
+        ON DELETE CASCADE
+);
+
+INSERT INTO employee_passwords (emp_no, password)
+SELECT emp_no, 'Password@123'
+FROM employees
+WHERE emp_no NOT IN (
+  SELECT emp_no FROM employee_passwords
+);
+
 ```
 
 #### 3. Run Keycloak Server with MySQL Integration
